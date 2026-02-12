@@ -23,12 +23,13 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "st75256.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+static st75256_t lcd;
+static uint8_t fb[ST75256_FB_SIZE];
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -89,6 +90,15 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
+    lcd.hspi = &hspi1;
+    lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;   // example
+    lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;   // example
+    lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;    // example
+
+    st75256_init(&lcd);
+    
+    for (int x=0; x<256; x++) st75256_draw_pixel(fb, x, 0, 1);
+    st75256_write_fb(&lcd, fb);
 
   /* USER CODE END 2 */
 
