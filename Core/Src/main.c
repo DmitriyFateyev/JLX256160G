@@ -23,7 +23,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <string.h>
 #include "st75256.h"
+#include "font_test10_simple.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,8 +99,30 @@ int main(void)
 
     st75256_init(&lcd);
     
-    for (int x=0; x<256; x++) st75256_draw_pixel(fb, x, 0, 1);
+    // 1. Clear the local framebuffer
+    memset(fb, 0x00, sizeof(fb));
+    
+    // Row 1: digits
+    draw_string_10x10(fb, 0, 0,  "0123456789");
+
+    // Row 2: VDC
+    draw_string_10x10(fb, 10, 40,  "12.34 VDC");
+
+    // Row 3: PC
+    draw_string_10x10(fb, 10, 60,  "56.78 PC");
+
+    // Push to display
     st75256_write_fb(&lcd, fb);
+    
+    // 2. Draw some industrial monitoring text
+    // Page 0 = Top of screen, Page 2 = 16 pixels down, etc.
+//    draw_string_16x16(fb, 0,  0, "SYSTEM STATUS: OK");
+//    draw_string_16x16(fb, 0,  4, "TEMP: 42.5 C");
+//    draw_string_16x16(fb, 0,  8, "PRESSURE: 1013 hPa");
+//    draw_string_16x16(fb, 0, 12, "BATTERY: [#### ] 80%");
+
+    // 3. Update the physical LCD
+    //st75256_write_fb(&lcd, fb);
 
   /* USER CODE END 2 */
 
@@ -106,6 +130,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+      HAL_Delay(250);
+      HAL_GPIO_TogglePin(BLUE_LED_GPIO_Port, BLUE_LED_Pin);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

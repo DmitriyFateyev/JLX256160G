@@ -15,7 +15,6 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#pragma once
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
 #include <stddef.h>
@@ -47,6 +46,11 @@ void st75256_clear(st75256_t *lcd, uint8_t value);        // value 0x00 or 0xFF
 
 // Pixel helper (1bpp, page-based)
 void st75256_draw_pixel(uint8_t *fb, int x, int y, uint8_t on);
+void draw_char_16x16(uint8_t *fb, int x, int page, char c);
+void draw_string_16x16(uint8_t *fb, int x, int page, const char *str);
+void draw_test_char_16cell(uint8_t *fb, int x, int page, char c, int size_index);
+void draw_test_string_16cell(uint8_t *fb, int x, int page, const char *s, int size_index);
+void draw_string_10x10(uint8_t *fb, int x, int y, const char *s);
 
 #ifdef __cplusplus
 }
