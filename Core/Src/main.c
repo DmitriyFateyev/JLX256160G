@@ -108,9 +108,31 @@ int main(void)
     st75256_draw_image(&lcd, image_data_Image);
     
     HAL_Delay(3000);
+    
+    st75256_draw_string_ru(fb, 65, 0, "СОСТОЯНИЕ СТАНЦИИ", 7);
+    st75256_draw_hline(fb, 12);
+
+    st75256_draw_string_ru(fb, 0, 2, "ПЭД:ВКЛ. РУЧНОЙ. ПОДДЕРЖАНИЕ ЧАСТОТЫ", 7);
+    st75256_draw_hline(fb, 28);
+    st75256_draw_hline(fb, 29);
+
+    st75256_draw_string_ru(fb, 0, 4, "ПОСЛЕДНИЙ ОСТАНОВ: 29/11/24 11:51:29", 7);
+    st75256_draw_string_ru(fb, 0, 5, "ПРИЧИНА: НИЗКОЕ U СЕТИ", 7);
+    st75256_draw_hline(fb, 49);
+    st75256_draw_hline(fb, 50);
+
+    st75256_draw_string_ru(fb, 0,  7, "U СЕТИ (В) AB/BC/CA  413  414  415", 7);
+    st75256_draw_string_ru(fb, 0,  9, "COSф / ЗАГРУЗКА (%)  0.79      62", 7);
+    st75256_draw_string_ru(fb, 0, 11, "F ЗАДАН.(ГЦ/ОБ/С)    44.9 /    44.9", 7);
+    st75256_draw_string_ru(fb, 0, 13, "F ВЫХОД.(ГЦ/ОБ/С)    44.9 /    44.9", 7);
+    st75256_draw_string_ru(fb, 0, 15, "R ИЗОЛЯЦИИ (кОм)     9999", 7);
+    st75256_draw_string_ru(fb, 0, 17, "P ВХ(АТ)/Т ПЭД(С)    27.891    83.00", 7);
+
+    st75256_draw_hline(fb, 148);
+    st75256_draw_string_ru(fb, 0, 19, "ВРЕМЯ: 05/02/25 18:19:43", 7);
 
     st75256_draw_string_ru(fb, 0, 0, "SYSTEM READY: 12.34V", 7);
-    st75256_draw_string_ru(fb, 0, 2, "TEMP: 24.5", 7);
+    st75256_draw_string_ru(fb, 0, 2, "TEMP: 24.5C", 7);
     st75256_draw_string_ru(fb, 0, 4, "PRESSURE: 1013 hPa", 7);
     st75256_draw_string_ru(fb, 0, 6, "BATTERY: [#### ] 80%", 7);
 
