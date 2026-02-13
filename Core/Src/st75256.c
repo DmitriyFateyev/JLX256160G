@@ -1,7 +1,5 @@
 #include "st75256.h"
-#include "font_industrial_16x16.h"
 #include <string.h>
-#include "font_test_9to14_16cell.h"
 
 static inline void CS_LOW(st75256_t *lcd)  { HAL_GPIO_WritePin(lcd->cs_port,  lcd->cs_pin,  GPIO_PIN_RESET); }
 static inline void CS_HIGH(st75256_t *lcd) { HAL_GPIO_WritePin(lcd->cs_port,  lcd->cs_pin,  GPIO_PIN_SET);   }
@@ -62,9 +60,9 @@ void st75256_set_window(st75256_t *lcd,
 void st75256_init(st75256_t *lcd)
 {
     // Hardware Reset Sequence
-    HAL_GPIO_WritePin(lcd->rst_port, lcd->rst_pin, GPIO_PIN_RESET);
+    RST_LOW(lcd);
     HAL_Delay(10);
-    HAL_GPIO_WritePin(lcd->rst_port, lcd->rst_pin, GPIO_PIN_SET);
+    RST_HIGH(lcd);
     HAL_Delay(10);
 
     // Extension Command Set 0 (Basic Commands)
@@ -197,128 +195,4 @@ void st75256_draw_pixel(uint8_t *fb, int x, int y, uint8_t on)
     size_t idx = (size_t)page * ST75256_WIDTH + (size_t)x;
     if (on) fb[idx] |= mask;
     else    fb[idx] &= (uint8_t)~mask;
-}
-
-
-//=======================================================================================================
-
-
-/**
- * @brief Draws a 16x16 character into the framebuffer.
- * 
- * @param fb    Pointer to your uint8_t fb[5120]
- * @param x     X coordinate (0 to 240)
- * @param page  The starting page (0 to 18). 
- *              Note: A 16px font occupies 'page' and 'page + 1'.
- * @param c     The ASCII character to draw.
- */
-void draw_char_16x16(uint8_t *fb, int x, int page, char c) {
-    // Range check for ASCII table
-    if (c < FONT16X16_FIRST_CHAR || c > FONT16X16_LAST_CHAR) {
-        c = ' '; // Fallback to space
-    }
-    
-    // Boundary check for screen dimensions (256x160)
-    if (x > 240 || page > 18) return;
-
-    uint8_t char_idx = c - FONT16X16_FIRST_CHAR;
-    const uint8_t *glyph = font_industrial_16x16[char_idx];
-
-    // Copy top 8 pixels (Page N)
-    // fb index = (page * width) + x
-    memcpy(&fb[page * 256 + x], &glyph[0], 16);
-
-    // Copy bottom 8 pixels (Page N + 1)
-    memcpy(&fb[(page + 1) * 256 + x], &glyph[16], 16);
-}
-
-/**
- * @brief Draws a string of 16x16 characters.
- * 
- * @param fb    Pointer to framebuffer
- * @param x     Starting X coordinate
- * @param page  Starting page (0-18)
- * @param str   Null-terminated string
- */
-void draw_string_16x16(uint8_t *fb, int x, int page, const char *str) {
-    while (*str && x <= 240) {
-        draw_char_16x16(fb, x, page, *str++);
-        x += 16; // Move to next character slot
-    }
-}
-
-void draw_test_char_16cell(uint8_t *fb, int x, int page,
-                           char c, int size_index)
-{
-    if (size_index < 0 || size_index >= TEST_FONT_SIZE_VARIANTS) return;
-    if (c < TEST_FONT_FIRST_CHAR || c > TEST_FONT_LAST_CHAR) c = ' ';
-
-    if (x > 240 || page > 18) return; // bounds check for 256x160
-
-    int glyph_idx = c - TEST_FONT_FIRST_CHAR;
-    const uint8_t *glyph = font_test_9to14_16cell[size_index][glyph_idx];
-
-    // page -> top 8 rows
-    memcpy(&fb[page * 256 + x],     &glyph[0],  16);
-    // page+1 -> bottom 8 rows
-    memcpy(&fb[(page + 1) * 256 + x], &glyph[16], 16);
-}
-
-void draw_test_string_16cell(uint8_t *fb, int x, int page,
-                             const char *s, int size_index)
-{
-    while (*s && x <= 240) {
-        draw_test_char_16cell(fb, x, page, *s++, size_index);
-        x += 16; // 16‑pixel cell width
-    }
-}
-
-#include "font_test10_simple.h"
-#include <string.h>
-
-static int test10_find_glyph_index(char c)
-{
-    for (int i = 0; i < TEST10_GLYPH_COUNT; i++) {
-        if (test10_chars[i] == c) return i;
-    }
-    return 0; // fall back to space
-}
-
-void draw_char_10x10(uint8_t *fb, int x, int y, char c)
-{
-    if (x < 0 || x > 246 || y < 0 || y > 150) return;
-
-    int gi = test10_find_glyph_index(c);
-    const uint8_t *g = test10_font[gi];
-
-    for (int row = 0; row < 10; row++) {
-        int yy = y + row;
-        if (yy < 0 || yy >= 160) continue;
-
-        int page = yy / 8;
-        int bit  = yy % 8;
-
-        uint16_t row_bits = ((uint16_t)g[row*2] << 8) | g[row*2 + 1];
-
-        for (int col = 0; col < 10; col++) {
-            int xx = x + col;
-            if (xx < 0 || xx >= 256) continue;
-
-            int on = (row_bits & (1u << (15 - col))) != 0;
-
-            size_t idx = page * 256 + xx;
-            uint8_t mask = (uint8_t)(1u << bit);  // Bit 0 = top pixel
-            
-            if (on) fb[idx] |= mask;
-            else    fb[idx] &= (uint8_t)~mask;
-        }
-    }
-}
-
-void draw_string_10x10(uint8_t *fb, int x, int y, const char *s)
-{
-    while (*s && x <= 246) {
-        draw_char_10x10(fb, x, y, *s++);
-        x += 10; // 10‑pixel advance
-    }
 }

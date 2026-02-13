@@ -25,7 +25,11 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include "st75256.h"
-#include "font_test10_simple.h"
+#include "st75256_font_8x8.h"
+#include "st75256_industrial_16x16.h"
+#include "st75256_font_12x16.h" 
+//#include "st75256_cyrillic_12x16.h" 
+#include "st75256_compact_6x16.h" 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,31 +103,39 @@ int main(void)
 
     st75256_init(&lcd);
     
-    // 1. Clear the local framebuffer
-    memset(fb, 0x00, sizeof(fb));
-    
-    // Row 1: digits
-    draw_string_10x10(fb, 0, 0,  "0123456789");
+    // 1. Clear Screen
+    memset(fb, 0, 5120);
 
-    // Row 2: VDC
-    draw_string_10x10(fb, 10, 40,  "12.34 VDC");
+ // Row 0 (pages 0-1): Header
+st75256_draw_string_ru(fb, 0, 0, "СОСТОЯНИЕ СТАНЦИИ", 7);
+st75256_draw_hline(fb, 17);  // single line under header
 
-    // Row 3: PC
-    draw_string_10x10(fb, 10, 60,  "56.78 PC");
+// Row 1 (pages 2-3): Status
+st75256_draw_string_ru(fb, 0, 2, "ПЭД:ВКЛ  РУЧНОЙ  ПОДДЕРЖАНИЕ ЧАСТОТЫ", 7);
+st75256_draw_hline(fb, 33);  // double line
+st75256_draw_hline(fb, 35);
+
+// Row 2 (pages 4-5): Last stop
+st75256_draw_string_ru(fb, 0, 4, "ПОСЛЕДНИЙ ОСТАНОВ: 29/11/24 11:51:29", 7);
+
+// Row 3 (pages 6-7): Reason
+st75256_draw_string_ru(fb, 0, 6, "ПРИЧИНА: НИЗКОЕ U СЕТИ", 7);
+
+// Row 4 (pages 8-9): blank / separator
+st75256_draw_hline(fb, 65);
+st75256_draw_hline(fb, 67);
+
+// Row 5 (pages 8-9): Data
+st75256_draw_string_ru(fb, 0, 8, "U СЕТИ (В) AB/BC/CA  413  414  415", 7);
+
+// ... more data rows ...
+
+// Bottom bar (pages 18-19)
+st75256_draw_hline(fb, 145);
+st75256_draw_string_ru(fb, 0, 18, "ВРЕМЯ: 05/02/25 18:19:43 ПОДОГРЕВ:ОТКЛ", 7);
 
     // Push to display
     st75256_write_fb(&lcd, fb);
-    
-    // 2. Draw some industrial monitoring text
-    // Page 0 = Top of screen, Page 2 = 16 pixels down, etc.
-//    draw_string_16x16(fb, 0,  0, "SYSTEM STATUS: OK");
-//    draw_string_16x16(fb, 0,  4, "TEMP: 42.5 C");
-//    draw_string_16x16(fb, 0,  8, "PRESSURE: 1013 hPa");
-//    draw_string_16x16(fb, 0, 12, "BATTERY: [#### ] 80%");
-
-    // 3. Update the physical LCD
-    //st75256_write_fb(&lcd, fb);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
