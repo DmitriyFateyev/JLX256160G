@@ -57,6 +57,7 @@ void st75256_set_window(st75256_t *lcd,
     st75256_write_cmd(lcd, 0x5C); // Write Display Data RAM
 }
 
+
 void st75256_init(st75256_t *lcd)
 {
     // Hardware Reset Sequence
@@ -118,28 +119,13 @@ void st75256_init(st75256_t *lcd)
     st75256_write_data(lcd, 0x00);  // Start column = 0
     st75256_write_data(lcd, 0xFF);  // End column = 255 (256 columns)
 
-    // Power Control
-    st75256_write_cmd(lcd, 0x20);   // Power Control
-    st75256_write_data(lcd, 0x0B);  // VB ON, VR ON, VF ON
-                                     // Bit 0: Regulator ON
-                                     // Bit 1: Follower ON
-                                     // Bit 3: Booster ON
-
-    // Contrast/Voltage Control (EV Control)
-    st75256_write_cmd(lcd, 0x81);   // Vop Control
-    st75256_write_data(lcd, 0x38);  // VPR[5:0] = 0x38 (lower 6 bits)
-    st75256_write_data(lcd, 0x04);  // VPR[8:6] = 0x04 (upper 3 bits)
-                                     // Total: 9-bit contrast value
-
-    // Data Format Select - CRITICAL FOR BIT ORDER
-    st75256_write_cmd(lcd, 0x0C);   // Data Format Select
-                                     // Sets LSB (bit 0) at top of 8-pixel page
-                                     // Without this: MSB (bit 7) is at top
-
-    // Display Mode Selection
-    st75256_write_cmd(lcd, 0xF0);   // Display Mode
-    st75256_write_data(lcd, 0x10);  // 0x10 = Monochrome Mode
-                                     // 0x11 = 4-Gray Mode
+     // Data Scan Direction (Screen Orientation)
+    st75256_write_cmd(lcd, 0xBC);   // Data Scan Direction
+    st75256_write_data(lcd, 0x00);  // 0x00 = Normal (MX=0, MY=0, MV=0)
+                                     // 0x01 = Mirror X (MX=1)
+                                     // 0x02 = Mirror Y (MY=1)
+                                     // 0x03 = Mirror X+Y (MX=1, MY=1)
+    st75256_write_data(lcd, 0xA6);  // Second parameter (vendor-specific)
 
     // Display Control
     st75256_write_cmd(lcd, 0xCA);   // Display Control
@@ -147,13 +133,29 @@ void st75256_init(st75256_t *lcd)
     st75256_write_data(lcd, 0x9F);  // Duty = 160 (0x9F = 159+1)
     st75256_write_data(lcd, 0x20);  // N-line inversion off
 
-    // Data Scan Direction (Screen Orientation)
-    st75256_write_cmd(lcd, 0xBC);   // Data Scan Direction
-    st75256_write_data(lcd, 0x00);  // 0x00 = Normal (MX=0, MY=0, MV=0)
-                                     // 0x01 = Mirror X (MX=1)
-                                     // 0x02 = Mirror Y (MY=1)
-                                     // 0x03 = Mirror X+Y (MX=1, MY=1)
-    st75256_write_data(lcd, 0xA6);  // Second parameter (vendor-specific)
+    // Display Mode Selection
+    st75256_write_cmd(lcd, 0xF0);   // Display Mode
+    st75256_write_data(lcd, 0x10);  // 0x10 = Monochrome Mode
+                                     // 0x11 = 4-Gray Mode
+
+    // Contrast/Voltage Control (EV Control)
+    st75256_write_cmd(lcd, 0x81);   // Vop Control
+    st75256_write_data(lcd, 0x38);  // VPR[5:0] = 0x38 (lower 6 bits)
+    st75256_write_data(lcd, 0x04);  // VPR[8:6] = 0x04 (upper 3 bits)
+                                     // Total: 9-bit contrast value                                     
+
+    // Power Control
+    st75256_write_cmd(lcd, 0x20);   // Power Control
+    st75256_write_data(lcd, 0x0B);  // VB ON, VR ON, VF ON
+                                     // Bit 0: Regulator ON
+                                     // Bit 1: Follower ON
+                                     // Bit 3: Booster ON
+    HAL_Delay(10);
+
+    // Data Format Select - CRITICAL FOR BIT ORDER
+    //st75256_write_cmd(lcd, 0x0C);   // Data Format Select
+                                     // Sets LSB (bit 0) at top of 8-pixel page
+                                     // Without this: MSB (bit 7) is at top
 
     // Display ON
     st75256_write_cmd(lcd, 0xAF);   // Display ON
