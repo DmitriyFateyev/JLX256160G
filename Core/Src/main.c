@@ -28,6 +28,8 @@
 #include "st75256_bitmap_7x16.h"
 #include "st75256_font_az.h" 
 #include "image.h" 
+#include "st75256_test.h" 
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -103,6 +105,10 @@ int main(void)
     
     // 1. Clear Screen
     memset(fb, 0, 5120);
+    
+    st75256_draw_image(&lcd, image_data_Image);
+    
+    while(1) HAL_Delay(100);
 
     st75256_draw_string_ru(fb, 65, 0, "СОСТОЯНИЕ СТАНЦИИ", 7);
     st75256_draw_hline(fb, 12);
@@ -142,7 +148,7 @@ int main(void)
     
     HAL_Delay(1000);
     
-    st75256_draw_image(&lcd, image);
+    
     
     
     
