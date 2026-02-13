@@ -107,25 +107,32 @@ int main(void)
     // 1. Clear Screen
     memset(fb, 0, 5120);
     
-    // Header (bigger gap after)
-    st75256_draw_string_ru(fb, 0, 0, "СОСТОЯНИЕ СТАНЦИИ", 7);          // pages 0-1
+    // Header (centered)
+    st75256_draw_string_ru(fb, 42, 0, "СОСТОЯНИЕ СТАНЦИИ", 7);
     st75256_draw_hline(fb, 17);
 
-    // Data rows with tight 8px spacing
-    st75256_draw_string_ru(fb, 0,  2, "ПЭД:ВКЛ РУЧНОЙ ПОДДЕРЖАНИЕ ЧАСТОТЫ", 7);  // pages 2-3
-    st75256_draw_string_ru(fb, 0,  4, "ПОСЛЕДНИЙ ОСТАНОВ: 29/11/24 11:51:29", 7); // pages 4-5
-    st75256_draw_string_ru(fb, 0,  5, "ПРИЧИНА: НИЗКОЕ U СЕТИ", 7);               // pages 5-6
+    // Status line
+    st75256_draw_string_ru(fb, 0, 2, "ПЭД:ВКЛ РУЧНОЙ ПОДДЕРЖАНИЕ ЧАСТОТЫ", 7);
+    st75256_draw_hline(fb, 33);
+    st75256_draw_hline(fb, 34);
+
+    // Info section (tight 1-page gap between these two)
+    st75256_draw_string_ru(fb, 0, 4, "ПОСЛЕДНИЙ ОСТАНОВ: 29/11/24 11:51:29", 7);
+    st75256_draw_string_ru(fb, 0, 5, "ПРИЧИНА: НИЗКОЕ U СЕТИ", 7);
     st75256_draw_hline(fb, 49);
-    st75256_draw_string_ru(fb, 0,  7, "U СЕТИ (В) AB/BC/CA  413  414  415", 7);   // pages 7-8
-    st75256_draw_string_ru(fb, 0,  8, "COS / ЗАГРУЗКА (%)   0.79     62", 7);     // pages 8-9
-    st75256_draw_string_ru(fb, 0,  9, "F ЗАДАН.(ГЦ/ОБ/С)   44.9 /  44.9", 7);    // pages 9-10
-    st75256_draw_string_ru(fb, 0, 10, "F ВЫХОД.(ГЦ/ОБ/С)   44.9 /  44.9", 7);    // pages 10-11
-    st75256_draw_string_ru(fb, 0, 11, "R ИЗОЛЯЦИИ (КОМ)     9999", 7);            // pages 11-12
-    st75256_draw_string_ru(fb, 0, 12, "P ВХ(АТ)/Т ПЭД(C)  27.891  83.00", 7);    // pages 12-13
+    st75256_draw_hline(fb, 50);
+
+    // Data table (2-page spacing = no overlap)
+    st75256_draw_string_ru(fb, 0,  7, "U СЕТИ (В) AB/BC/CA  413  414  415", 7);
+    st75256_draw_string_ru(fb, 0,  9, "COS / ЗАГРУЗКА (%)  0.79      62", 7);
+    st75256_draw_string_ru(fb, 0, 11, "F ЗАДАН.(ГЦ/ОБ/С)  44.9 /  44.9", 7);
+    st75256_draw_string_ru(fb, 0, 13, "F ВЫХОД.(ГЦ/ОБ/С)  44.9 /  44.9", 7);
+    st75256_draw_string_ru(fb, 0, 15, "R ИЗОЛЯЦИИ (КОМ)    9999", 7);
+    st75256_draw_string_ru(fb, 0, 17, "P ВХ(АТ)/Т ПЭД(С) 27.891  83.00", 7);
 
     // Bottom bar
-    st75256_draw_hline(fb, 145);
-    st75256_draw_string_ru(fb, 0, 18, "ВРЕМЯ: 05/02/25 18:19:43 ПОДОГРЕВ:ОТКЛ", 7);
+    st75256_draw_hline(fb, 153);
+    st75256_draw_string_ru(fb, 0, 19, "ВРЕМЯ: 05/02/25 18:19:43 ПОДОГРЕВ:ОТ", 7);
     
 //    st75256_draw_string_ru(fb, 0, 0, "СОСТОЯНИЕ СТАНЦИИ", 7);
 //    st75256_draw_string_ru(fb, 0, 2, "ПЭД:ВКЛ. РУЧНОЙ. ПОДДЕРЖАНИЕ ЧАСТОТЫ", 7);
