@@ -180,6 +180,24 @@ void st75256_draw_hline(uint8_t *fb, int y) {
     }
 }
 
+//void st75256_draw_char_ru(uint8_t *fb, int x, int page, uint16_t unicode) {
+//    int index = -1;
+//    if (unicode >= 32 && unicode <= 126) {
+//        index = unicode - 32;
+//    } else if (unicode >= 0x0410 && unicode <= 0x044F) {
+//        index = unicode - 0x0410 + 95;
+//    }
+//    if (index < 0) return;
+
+//    const uint8_t *g = font_bmp[index];
+//    for (int col = 0; col < FONT_CHAR_W; col++) {
+//        if (x + col >= 256) break;
+//        fb[page * 256 + x + col] = g[col];
+//        fb[(page + 1) * 256 + x + col] = g[col + FONT_CHAR_W];
+//    }
+//}
+
+
 void st75256_draw_char_ru(uint8_t *fb, int x, int page, uint16_t unicode) {
     int index = -1;
     if (unicode >= 32 && unicode <= 126) {
@@ -188,12 +206,12 @@ void st75256_draw_char_ru(uint8_t *fb, int x, int page, uint16_t unicode) {
         index = unicode - 0x0410 + 95;
     }
     if (index < 0) return;
-
+    
     const uint8_t *g = font_bmp[index];
     for (int col = 0; col < FONT_CHAR_W; col++) {
         if (x + col >= 256) break;
-        fb[page * 256 + x + col] = g[col];
-        fb[(page + 1) * 256 + x + col] = g[col + FONT_CHAR_W];
+        fb[page * 256 + x + col] |= g[col];           // |= instead of =
+        fb[(page + 1) * 256 + x + col] |= g[col + FONT_CHAR_W];  // |= instead of =
     }
 }
 
