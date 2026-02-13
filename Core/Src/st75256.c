@@ -85,6 +85,7 @@ void st75256_init(st75256_t *lcd)
     st75256_write_cmd(lcd, 0x51);   // Booster Level x10
     st75256_write_data(lcd, 0xFB);  // Set to x10 boost (0xFA = x8)
 
+/* Monochrome mode. Gray level is omitted
     // Gray Level Configuration (16 levels for 4-gray mode)
     st75256_write_cmd(lcd, 0x20);   // Gray Level
     st75256_write_data(lcd, 0x01);
@@ -103,14 +104,14 @@ void st75256_init(st75256_t *lcd)
     st75256_write_data(lcd, 0x1B);
     st75256_write_data(lcd, 0x1D);
     st75256_write_data(lcd, 0x1F);
-
+*/
     // Back to Extension Command Set 0
     st75256_write_cmd(lcd, 0x30);   // EXT=0
 
     // Set Display Address Range
     st75256_write_cmd(lcd, 0x75);   // Set Page Address (Y-axis)
     st75256_write_data(lcd, 0x00);  // Start page = 0
-    st75256_write_data(lcd, 0x28);  // End page = 40 (160 rows / 4 = 40 for 4-gray)
+    st75256_write_data(lcd, 0x13);  // End page = 40 (160 rows / 4 = 40 for 4-gray)
                                      // For monochrome: 160 rows / 8 = 20 pages
 
     st75256_write_cmd(lcd, 0x15);   // Set Column Address (X-axis)
@@ -195,4 +196,38 @@ void st75256_draw_pixel(uint8_t *fb, int x, int y, uint8_t on)
     size_t idx = (size_t)page * ST75256_WIDTH + (size_t)x;
     if (on) fb[idx] |= mask;
     else    fb[idx] &= (uint8_t)~mask;
+}
+
+void st75256_test_checkerboard(st75256_t *dev)
+{
+    st75256_write_cmd(dev, 0x15);
+    st75256_write_data(dev, 0x00);
+    st75256_write_data(dev, 0xFF);
+
+    st75256_write_cmd(dev, 0x75);
+    st75256_write_data(dev, 0x00);
+    st75256_write_data(dev, 0x13);
+
+    st75256_write_cmd(dev, 0x5C);
+
+    for (int page = 0; page < 20; page++)
+        for (int col = 0; col < 256; col++)
+            st75256_write_data(dev, (col & 1) ? 0xAA : 0x55);
+}
+
+void st75256_draw_image(st75256_t *dev, const uint8_t *img)
+{
+    // Установить окно на весь экран
+    st75256_write_cmd(dev, 0x15);        // Column address
+    st75256_write_data(dev, 0x00);       // start
+    st75256_write_data(dev, 0xFF);       // end (255)
+
+    st75256_write_cmd(dev, 0x75);        // Page address
+    st75256_write_data(dev, 0x00);       // start
+    st75256_write_data(dev, 0x13);       // end (19 = 160/8 - 1)
+
+    st75256_write_cmd(dev, 0x5C);        // Write data
+
+    // Отправить все данные (256 * 20 = 5120 байт)
+    st75256_write_data_buf(dev, img, 256 * 20);
 }
