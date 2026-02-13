@@ -85,7 +85,7 @@ void st75256_init(st75256_t *lcd)
     st75256_write_cmd(lcd, 0x51);   // Booster Level x10
     st75256_write_data(lcd, 0xFB);  // Set to x10 boost (0xFA = x8)
 
-/* Monochrome mode. Gray level is omitted
+/* Monochrome mode. Gray Level setting is irrelevant
     // Gray Level Configuration (16 levels for 4-gray mode)
     st75256_write_cmd(lcd, 0x20);   // Gray Level
     st75256_write_data(lcd, 0x01);
@@ -111,7 +111,7 @@ void st75256_init(st75256_t *lcd)
     // Set Display Address Range
     st75256_write_cmd(lcd, 0x75);   // Set Page Address (Y-axis)
     st75256_write_data(lcd, 0x00);  // Start page = 0
-    st75256_write_data(lcd, 0x13);  // End page = 40 (160 rows / 4 = 40 for 4-gray)
+    st75256_write_data(lcd, 0x28);  // End page = 40 (160 rows / 4 = 40 for 4-gray)
                                      // For monochrome: 160 rows / 8 = 20 pages
 
     st75256_write_cmd(lcd, 0x15);   // Set Column Address (X-axis)

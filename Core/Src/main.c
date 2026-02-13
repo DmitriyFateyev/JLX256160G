@@ -97,16 +97,16 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
     lcd.hspi = &hspi1;
-    lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;   // example
-    lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;   // example
-    lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;    // example
+    lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;
+    lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;
+    lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;
 
     st75256_init(&lcd);
     
     // 1. Clear Screen
     memset(fb, 0, 5120);
     
-    st75256_draw_image(&lcd, image_data_Image);
+    st75256_draw_image(&lcd, bmp1);
     
     while(1) HAL_Delay(100);
 
