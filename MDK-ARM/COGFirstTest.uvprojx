@@ -514,11 +514,6 @@
               <FileType>1</FileType>
               <FilePath>..\Core\Src\st75256.c</FilePath>
             </File>
-            <File>
-              <FileName>st75256_test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\st75256_test.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
