@@ -99,14 +99,14 @@ int main(void)
     st75256_draw_string_uni(fb, 5, 4, "G\xC6\x8FRGİNLİK:", 7);
     st75256_draw_string_uni(fb, 135, 4, "305 V", 7);
     
-    st75256_draw_string_uni(fb, 5, 6, "C\xC6\x8FR\xC6\x8FYAN", 7);
-    st75256_draw_string_uni(fb, 135, 6, "5.56 A", 7);
+    st75256_draw_string_uni(fb, 5, 6, "C\xC6\x8FR\xC6\x8FYAN(MAX)", 7);
+    st75256_draw_string_uni(fb, 135, 6, "5.56 A (17.49)", 7);
     
     st75256_draw_string_uni(fb, 5, 8, "TEZLIK", 7);
     st75256_draw_string_uni(fb, 135, 8, "43.5 Hs", 7);
     
-    st75256_draw_string_uni(fb, 5, 10, "GÜC", 7);
-    st75256_draw_string_uni(fb, 135, 10, "12.8 kVt", 7);
+    st75256_draw_string_uni(fb, 5, 10, "GÜC(MAX)", 7);
+    st75256_draw_string_uni(fb, 135, 10, "12.8 kVt (19.4)", 7);
     
     st75256_draw_string_uni(fb, 5, 12, "YIRĞALANMA SAYI", 7);
     st75256_draw_string_uni(fb, 135, 12, "6.25 y/d\xC9\x99q", 7);
