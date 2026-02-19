@@ -85,7 +85,7 @@ int main(void)
     // 1. Clear Screen
     memset(fb, 0, 5120);
     st75256_draw_string_uni(fb, 5, 0, "\xC6\x8Flifba", 7);
-    st75256_draw_string_uni(fb, 5, 2, "\xC6\x8F \xC9\x99 \xC9\x99", 7);
+    st75256_draw_string_uni(fb, 5, 2, "\xC6\x8F\xC9\x99 \xC9\x99", 7);
     st75256_write_fb(&lcd, fb);
     
     while(1) HAL_Delay(3000);
