@@ -191,13 +191,24 @@ void st75256_draw_pixel(uint8_t *fb, int x, int y, uint8_t on)
     int page = y >> 3;
     int bit  = y & 7;
 
-    // Manual notes D0 at top, D7 at bottom within the byte (common ST75256 mapping).
-    // That means bit=0 is top pixel in the 8-row group.
-    uint8_t mask = (uint8_t)(1u << bit);
+    // MSB (bit 7) is at top of the 8-pixel page group.
+    uint8_t mask = (uint8_t)(0x80u >> bit);
 
     size_t idx = (size_t)page * ST75256_WIDTH + (size_t)x;
     if (on) fb[idx] |= mask;
     else    fb[idx] &= (uint8_t)~mask;
+}
+
+void st75256_draw_hline(uint8_t *fb, int y, uint8_t on)
+{
+    if (y < 0 || y >= ST75256_HEIGHT) return;
+    int page = y >> 3;
+    uint8_t mask = (uint8_t)(0x80u >> (y & 7)); // MSB = верхний пиксель
+    for (int x = 0; x < ST75256_WIDTH; x++) {
+        size_t idx = (size_t)page * ST75256_WIDTH + (size_t)x;
+        if (on) fb[idx] |= mask;
+        else    fb[idx] &= (uint8_t)~mask;
+    }
 }
 
 void st75256_test_checkerboard(st75256_t *dev)
@@ -216,7 +227,6 @@ void st75256_test_checkerboard(st75256_t *dev)
         for (int col = 0; col < 256; col++)
             st75256_write_data(dev, (col & 1) ? 0xAA : 0x55);
 }
-
 
 static inline size_t FB_IDX(int page, int col) {
     return (size_t)page * ST75256_WIDTH + (size_t)col;

@@ -86,9 +86,17 @@ int main(void)
     // 1. Clear Screen
     memset(fb, 0, 5120);
     
+    for(int i=0; i<160; i++)
+    {
+        HAL_Delay(50);
+        st75256_draw_pixel(fb, i, i, 1);
+        st75256_write_fb(&lcd, fb);
+    }
+    
+    HAL_Delay(3000);
     st75256_draw_string_uni(fb, 3, 0, "REJIM:", 7);
     st75256_draw_string_uni(fb, 46, 0, AZ_E_CAP"L IL"AZ_E_CAP , 7);
-    st75256_draw_hline(fb, 12);
+    st75256_draw_hline(fb, 12, 1);
     
     st75256_draw_string_uni(fb, 135, 0, "05/02/25 18:19:43", 7);
     
@@ -113,6 +121,7 @@ int main(void)
     
     st75256_draw_string_uni(fb, 5, 14, "İŞL"AZ_E_CAP"M"AZ_E_CAP " MÜDD"AZ_E_CAP"Tİ" , 7);
     st75256_draw_string_uni(fb, 135, 14, "14 sut 16 saat", 7);
+    st75256_draw_hline(fb, 122, 1);
     
     st75256_draw_string_uni(fb, 5, 16, "SON DAYANMA: 05/02/25 18:19:43", 7);
     //char * reason = { 'S', 0xC6, };
