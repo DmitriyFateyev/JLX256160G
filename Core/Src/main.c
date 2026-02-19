@@ -84,15 +84,42 @@ int main(void)
     
     // 1. Clear Screen
     memset(fb, 0, 5120);
-    
-    //st75256_draw_image(&lcd, image_data_Image);
-    st75256_draw_string_uni(fb, 0, 0, "\xC9\x99lifba", 7);
+    st75256_draw_string_uni(fb, 5, 0, "\xC6\x8Flifba", 7);
+    st75256_draw_string_uni(fb, 5, 2, "\xC6\x8F \xC9\x99 \xC9\x99", 7);
     st75256_write_fb(&lcd, fb);
     
-    HAL_Delay(3000);
+    while(1) HAL_Delay(3000);
     
-    memset(fb, 0, 5120);
+    st75256_draw_string_uni(fb, 5, 0, "QUYU: 1286", 7);
+    st75256_draw_string_uni(fb, 180, 0, "S/N: 220041", 7);
+    st75256_draw_hline(fb, 12);
     
+    st75256_draw_string_uni(fb, 5, 2, "ÇIXIŞ G\xC6\x8FRGİNLİYİ", 7);
+    st75256_draw_string_uni(fb, 180, 2, "305 V", 7);
+    
+    st75256_draw_string_uni(fb, 5, 4, "Cıxış c\xC9\x99r\xC9\x99yanı", 7);
+    st75256_draw_string_uni(fb, 180, 4, "5.56 A", 7);
+    
+    st75256_draw_string_uni(fb, 5, 6, "Çıxış tezliyi", 7);
+    st75256_draw_string_uni(fb, 180, 6, "43.5 Hs", 7);
+    
+    st75256_draw_string_uni(fb, 5, 8, "Cıxış gücü", 7);
+    st75256_draw_string_uni(fb, 180, 8, "12.8 kVt", 7);
+    
+    st75256_draw_string_uni(fb, 5, 10, "Yırğalanma sayı", 7);
+    st75256_draw_string_uni(fb, 180, 10, "6.25y/d\xC9\x99q", 7);
+    
+    st75256_draw_string_uni(fb, 5, 14, "Son dayanma: 05/02/25 18:19:43", 7);
+    st75256_draw_string_uni(fb, 5, 16, "S\xC6\x8F B \xC6\x8F B: Alçaq giriş g\xC9\x99rginliyi", 7);
+    
+    //st75256_draw_image(&lcd, image_data_Image);
+    //st75256_draw_string_uni(fb, 0, 0, "\xC9\x99lifba", 7);
+//    st75256_write_fb(&lcd, fb);
+//    
+//    HAL_Delay(3000);
+//    
+//    memset(fb, 0, 5120);
+    /*
     st75256_draw_string_uni(fb, 65, 0, "СОСТОЯНИЕ СТАНЦИИ", 7);
     st75256_draw_hline(fb, 12);
 
@@ -114,7 +141,7 @@ int main(void)
     
     st75256_draw_hline(fb, 148);
     st75256_draw_string_uni(fb, 0, 19, "ВРЕМЯ: 05/02/25 18:19:43", 7);
-    
+    */
 //    st75256_draw_string_uni(fb, 0, 0, "SYSTEM READY: 12.34V", 7);
 //    st75256_draw_string_uni(fb, 0, 2, "TEMP: 24.5C", 7);
 //    st75256_draw_string_uni(fb, 0, 4, "PRESSURE: 1013 hPa", 7);
