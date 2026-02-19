@@ -51,7 +51,8 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+#define AZ_E_CAP "\xC6\x8F" // Ə U+018F
+#define AZ_E  "\xC9\x99"   // ə U+0259
 /* USER CODE END 0 */
 
 /**
@@ -84,34 +85,39 @@ int main(void)
     
     // 1. Clear Screen
     memset(fb, 0, 5120);
-    st75256_draw_string_uni(fb, 5, 0, "\xC6\x8Flifba", 7);
-    st75256_draw_string_uni(fb, 5, 2, "\xC6\x8F\xC9\x99 \xC9\x99", 7);
-    st75256_write_fb(&lcd, fb);
     
-    while(1) HAL_Delay(3000);
-    
-    st75256_draw_string_uni(fb, 5, 0, "QUYU: 1286", 7);
-    st75256_draw_string_uni(fb, 180, 0, "S/N: 220041", 7);
+    st75256_draw_string_uni(fb, 3, 0, "REJIM:", 7);
+    st75256_draw_string_uni(fb, 46, 0, AZ_E_CAP"L IL"AZ_E_CAP , 7);
     st75256_draw_hline(fb, 12);
     
-    st75256_draw_string_uni(fb, 5, 2, "ÇIXIŞ G\xC6\x8FRGİNLİYİ", 7);
-    st75256_draw_string_uni(fb, 180, 2, "305 V", 7);
+    st75256_draw_string_uni(fb, 135, 0, "05/02/25 18:19:43", 7);
     
-    st75256_draw_string_uni(fb, 5, 4, "Cıxış c\xC9\x99r\xC9\x99yanı", 7);
-    st75256_draw_string_uni(fb, 180, 4, "5.56 A", 7);
     
-    st75256_draw_string_uni(fb, 5, 6, "Çıxış tezliyi", 7);
-    st75256_draw_string_uni(fb, 180, 6, "43.5 Hs", 7);
+    st75256_draw_string_uni(fb, 5, 2, "ÇIXIŞ:", 7);
+    //st75256_draw_hline(fb, 24);
     
-    st75256_draw_string_uni(fb, 5, 8, "Cıxış gücü", 7);
-    st75256_draw_string_uni(fb, 180, 8, "12.8 kVt", 7);
+    st75256_draw_string_uni(fb, 5, 4, "G\xC6\x8FRGİNLİK:", 7);
+    st75256_draw_string_uni(fb, 135, 4, "305 V", 7);
     
-    st75256_draw_string_uni(fb, 5, 10, "Yırğalanma sayı", 7);
-    st75256_draw_string_uni(fb, 180, 10, "6.25y/d\xC9\x99q", 7);
+    st75256_draw_string_uni(fb, 5, 6, "C\xC6\x8FR\xC6\x8FYAN", 7);
+    st75256_draw_string_uni(fb, 135, 6, "5.56 A", 7);
     
-    st75256_draw_string_uni(fb, 5, 14, "Son dayanma: 05/02/25 18:19:43", 7);
-    st75256_draw_string_uni(fb, 5, 16, "S\xC6\x8F B \xC6\x8F B: Alçaq giriş g\xC9\x99rginliyi", 7);
+    st75256_draw_string_uni(fb, 5, 8, "TEZLIK", 7);
+    st75256_draw_string_uni(fb, 135, 8, "43.5 Hs", 7);
     
+    st75256_draw_string_uni(fb, 5, 10, "GÜC", 7);
+    st75256_draw_string_uni(fb, 135, 10, "12.8 kVt", 7);
+    
+    st75256_draw_string_uni(fb, 5, 12, "YIRĞALANMA SAYI", 7);
+    st75256_draw_string_uni(fb, 135, 12, "6.25 y/d\xC9\x99q", 7);
+    
+    st75256_draw_string_uni(fb, 5, 14, "İŞL"AZ_E_CAP"M"AZ_E_CAP " MÜDD"AZ_E_CAP"Tİ" , 7);
+    st75256_draw_string_uni(fb, 135, 14, "14 sut 16 saat", 7);
+    
+    st75256_draw_string_uni(fb, 5, 16, "SON DAYANMA: 05/02/25 18:19:43", 7);
+    //char * reason = { 'S', 0xC6, };
+    st75256_draw_string_uni(fb, 5, 18, "S" AZ_E_CAP "B" AZ_E_CAP "B:", 7);  
+    st75256_draw_string_uni(fb, 50, 18, "Alçaq giriş g\xC9\x99rginliyi", 7);
     //st75256_draw_image(&lcd, image_data_Image);
     //st75256_draw_string_uni(fb, 0, 0, "\xC9\x99lifba", 7);
 //    st75256_write_fb(&lcd, fb);
