@@ -121,8 +121,9 @@ int main(void)
     
     st75256_draw_string_uni(fb, 5, 16, "SON DAYANMA: 05/02/25 18:19:43", 7);
     //char * reason = { 'S', 0xC6, };
-    st75256_draw_string_uni(fb, 5, 18, "S" AZ_E_CAP "B" AZ_E_CAP "B:", 7);  
-    st75256_draw_string_uni(fb, 50, 18, "STOP (Operator)", 7);
+    st75256_draw_string_uni(fb, 5, 17, "S" AZ_E_CAP "B" AZ_E_CAP "B:", 7);  
+    st75256_draw_string_uni(fb, 50, 17, "STOP (Operator)", 7);
+    st75256_draw_string_uni(fb, 5, 18, "RABIT"AZ_E_CAP": QOŞULU", 7);
     //st75256_draw_image(&lcd, image_data_Image);
     //st75256_draw_string_uni(fb, 0, 0, "\xC9\x99lifba", 7);
 //    st75256_write_fb(&lcd, fb);
