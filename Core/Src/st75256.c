@@ -211,6 +211,37 @@ void st75256_draw_hline(uint8_t *fb, int y, uint8_t on)
     }
 }
 
+// Рисует вертикальную линию в колонке x от y0 до y1 включительно.
+// on == 1 — установить пиксели, on == 0 — сбросить пиксели.
+void st75256_draw_vline(uint8_t *fb, int x, int y0, int y1, uint8_t on)
+{
+    if (x < 0 || x >= ST75256_WIDTH) return;
+
+    if (y0 > y1) { int t = y0; y0 = y1; y1 = t; }
+    if (y1 < 0 || y0 >= ST75256_HEIGHT) return;
+
+    if (y0 < 0) y0 = 0;
+    if (y1 >= ST75256_HEIGHT) y1 = ST75256_HEIGHT - 1;
+
+    int p0 = y0 >> 3;
+    int p1 = y1 >> 3;
+
+    for (int p = p0; p <= p1; ++p) {
+        uint8_t mask = 0;
+        int start_y = (p == p0) ? y0 : (p << 3);
+        int end_y   = (p == p1) ? y1 : ((p << 3) + 7);
+
+        for (int y = start_y; y <= end_y; ++y) {
+            int bit = y & 7;
+            mask |= (uint8_t)(0x80u >> bit); // MSB = верхний пиксель
+        }
+
+        size_t idx = (size_t)p * ST75256_WIDTH + (size_t)x;
+        if (on) fb[idx] |= mask;
+        else    fb[idx] &= (uint8_t)~mask;
+    }
+}
+
 void st75256_test_checkerboard(st75256_t *dev)
 {
     st75256_write_cmd(dev, 0x15);

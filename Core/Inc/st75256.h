@@ -46,6 +46,7 @@ void st75256_clear(st75256_t *lcd, uint8_t value);        // value 0x00 or 0xFF
 // Pixel helper (1bpp, page-based)
 void st75256_draw_pixel(uint8_t *fb, int x, int y, uint8_t on);
 void st75256_draw_hline(uint8_t *fb, int y, uint8_t on);
+void st75256_draw_vline(uint8_t *fb, int x, int y0, int y1, uint8_t on);
 void st75256_test_checkerboard(st75256_t *dev);
 void st75256_test_lcdic_pattern(st75256_t *lcd);
 void st75256_draw_image(st75256_t *dev, const uint8_t *img);

@@ -85,34 +85,30 @@ int main(void)
     
     // 1. Clear Screen
     memset(fb, 0, 5120);
-    
-    for(int i=0; i<160; i++)
-    {
-        HAL_Delay(50);
-        st75256_draw_pixel(fb, i, i, 1);
-        st75256_write_fb(&lcd, fb);
-    }
-    
-    HAL_Delay(3000);
+
     st75256_draw_string_uni(fb, 3, 0, "REJIM:", 7);
-    st75256_draw_string_uni(fb, 46, 0, AZ_E_CAP"L IL"AZ_E_CAP , 7);
+    //st75256_draw_string_uni(fb, 46, 0, AZ_E_CAP"L IL"AZ_E_CAP , 7); // MANUAL
+    st75256_draw_string_uni(fb, 46, 0, "AVTO" , 7); // AUTO
     st75256_draw_hline(fb, 12, 1);
+    st75256_draw_hline(fb, 0, 1);
+    st75256_draw_hline(fb, 159, 1);
+    st75256_draw_vline(fb, 0, 0, 159, 1);
+    st75256_draw_vline(fb, 255, 0, 159, 1);
     
     st75256_draw_string_uni(fb, 135, 0, "05/02/25 18:19:43", 7);
     
     
     st75256_draw_string_uni(fb, 5, 2, "ÇIXIŞ:", 7);
     //st75256_draw_hline(fb, 24);
+    st75256_draw_string_uni(fb, 5, 8, "TEZLIK", 7);
+    st75256_draw_string_uni(fb, 135, 8, "43.5 Hs", 7);
     
-    st75256_draw_string_uni(fb, 5, 4, "G\xC6\x8FRGİNLİK:", 7);
+    st75256_draw_string_uni(fb, 5, 4, "G\xC6\x8FRGİNLİK", 7);
     st75256_draw_string_uni(fb, 135, 4, "305 V", 7);
     
     st75256_draw_string_uni(fb, 5, 6, "C\xC6\x8FR\xC6\x8FYAN(MAX)", 7);
     st75256_draw_string_uni(fb, 135, 6, "5.56 A (17.49)", 7);
-    
-    st75256_draw_string_uni(fb, 5, 8, "TEZLIK", 7);
-    st75256_draw_string_uni(fb, 135, 8, "43.5 Hs", 7);
-    
+        
     st75256_draw_string_uni(fb, 5, 10, "GÜC(MAX)", 7);
     st75256_draw_string_uni(fb, 135, 10, "12.8 kVt (19.4)", 7);
     
@@ -126,7 +122,7 @@ int main(void)
     st75256_draw_string_uni(fb, 5, 16, "SON DAYANMA: 05/02/25 18:19:43", 7);
     //char * reason = { 'S', 0xC6, };
     st75256_draw_string_uni(fb, 5, 18, "S" AZ_E_CAP "B" AZ_E_CAP "B:", 7);  
-    st75256_draw_string_uni(fb, 50, 18, "Alçaq giriş g\xC9\x99rginliyi", 7);
+    st75256_draw_string_uni(fb, 50, 18, "STOP (Operator)", 7);
     //st75256_draw_image(&lcd, image_data_Image);
     //st75256_draw_string_uni(fb, 0, 0, "\xC9\x99lifba", 7);
 //    st75256_write_fb(&lcd, fb);
