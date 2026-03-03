@@ -86,26 +86,6 @@ void st75256_init(st75256_t *lcd)
     st75256_write_cmd(lcd, 0x51);   // Booster Level x10
     st75256_write_data(lcd, 0xFB);  // Set to x10 boost (0xFA = x8)
 
-/* Monochrome mode. Gray Level setting is irrelevant
-    // Gray Level Configuration (16 levels for 4-gray mode)
-    st75256_write_cmd(lcd, 0x20);   // Gray Level
-    st75256_write_data(lcd, 0x01);
-    st75256_write_data(lcd, 0x03);
-    st75256_write_data(lcd, 0x05);
-    st75256_write_data(lcd, 0x07);
-    st75256_write_data(lcd, 0x09);
-    st75256_write_data(lcd, 0x0B);
-    st75256_write_data(lcd, 0x0D);
-    st75256_write_data(lcd, 0x10);
-    st75256_write_data(lcd, 0x11);
-    st75256_write_data(lcd, 0x13);
-    st75256_write_data(lcd, 0x15);
-    st75256_write_data(lcd, 0x17);
-    st75256_write_data(lcd, 0x19);
-    st75256_write_data(lcd, 0x1B);
-    st75256_write_data(lcd, 0x1D);
-    st75256_write_data(lcd, 0x1F);
-*/
     // Back to Extension Command Set 0
     st75256_write_cmd(lcd, 0x30);   // EXT=0
 
@@ -244,19 +224,34 @@ void st75256_draw_vline(uint8_t *fb, int x, int y0, int y1, uint8_t on)
 
 void st75256_test_checkerboard(st75256_t *dev)
 {
+    // 1. Явно задаем окно 0-255 по горизонтали
     st75256_write_cmd(dev, 0x15);
-    st75256_write_data(dev, 0x00);
-    st75256_write_data(dev, 0xFF);
+    st75256_write_data(dev, 0x00); // Start Column
+    st75256_write_data(dev, 0xFF); // End Column (255)
 
+    // 2. Задаем окно 0-19 по страницам (160 строк / 8)
     st75256_write_cmd(dev, 0x75);
-    st75256_write_data(dev, 0x00);
-    st75256_write_data(dev, 0x13);
+    st75256_write_data(dev, 0x00); // Start Page
+    st75256_write_data(dev, 0x13); // End Page (19)
 
-    st75256_write_cmd(dev, 0x5C);
+    st75256_write_cmd(dev, 0x30); // EXT=0
+    st75256_write_cmd(dev, 0x5C); // Write RAM
 
-    for (int page = 0; page < 20; page++)
-        for (int col = 0; col < 256; col++)
-            st75256_write_data(dev, (col & 1) ? 0xAA : 0x55);
+    for (int page = 0; page < 20; page++) 
+    {
+        for (int col = 0; col < 256; col++) 
+        {
+            // (col / 8) - меняет паттерн каждые 8 пикселей по горизонтали
+            // (page % 2) - инвертирует паттерн каждую страницу (8 пикселей по вертикали)
+            // Используем 0xFF и 0x00 для четких квадратов 8x8
+            
+            if (((col / 8) + (page % 2)) % 2 == 0) {
+                st75256_write_data(dev, 0xFF); // Черный квадрат
+            } else {
+                st75256_write_data(dev, 0x00); // Белый квадрат
+            }
+        }
+    }
 }
 
 static inline size_t FB_IDX(int page, int col) {

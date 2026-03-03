@@ -82,11 +82,12 @@ int main(void)
     lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;
     st75256_init(&lcd);    
     memset(fb, 0, 5120);
-    st75256_draw_string_uni(fb, 3, 0, "REJIM:", 7);
-    st75256_draw_hline(fb, 0, 1);
-    st75256_draw_vline(fb, 0, 0, 159, 1);    
+//    st75256_draw_string_uni(fb, 3, 19, "REJIM:", 7);
+//    st75256_draw_hline(fb, 0, 1);
+//    st75256_draw_vline(fb, 0, 0, 159, 1);
+    st75256_test_checkerboard(&lcd);
     // Push to display
-    st75256_write_fb(&lcd, fb);
+    //st75256_write_fb(&lcd, fb);
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
