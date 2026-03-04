@@ -25,10 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include "st75256.h"
-#include "st75256_font_az_msb.h" 
-#include "image.h"
-#include "font_ind_12.h"
-#include "st75256_font_az_msb.h"
+#include "lv_conf.h"
 /* USER CODE END Includes */
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
@@ -81,8 +78,7 @@ lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;
 lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;
 st75256_init(&lcd);
 
-//memset(fb, 0, 5120);
-st75256_test_final(fb);
+memset(fb, 0, 5120);
 
 st75256_write_fb(&lcd, fb);
   /* USER CODE END 2 */

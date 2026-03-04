@@ -57,92 +57,6 @@ void st75256_set_window(st75256_t *lcd,
     st75256_write_cmd(lcd, 0x5C); // Write Display Data RAM
 }
 
-
-void st75256_init(st75256_t *lcd)
-{
-    // Hardware Reset Sequence
-    RST_LOW(lcd);
-    HAL_Delay(10);
-    RST_HIGH(lcd);
-    HAL_Delay(10);
-
-    // Extension Command Set 0 (Basic Commands)
-    st75256_write_cmd(lcd, 0x30);   // EXT=0
-    st75256_write_cmd(lcd, 0x94);   // Sleep Out
-    HAL_Delay(50);                  // Wait for oscillator stabilization
-
-    // Extension Command Set 1 (Extended Commands)
-    st75256_write_cmd(lcd, 0x31);   // EXT=1
-    st75256_write_cmd(lcd, 0xD7);   // Auto Read Disable
-    st75256_write_data(lcd, 0x9F);  // Disable auto-read
-
-    // Analog Circuit Configuration
-    st75256_write_cmd(lcd, 0x32);   // Analog SET
-    st75256_write_data(lcd, 0x00);  // OSC Frequency adjustment
-    st75256_write_data(lcd, 0x01);  // Booster efficiency = 6kHz
-    st75256_write_data(lcd, 0x03);  // Bias = 1/11
-
-    // Booster Level (Optional - for better contrast/brightness)
-    st75256_write_cmd(lcd, 0x51);   // Booster Level x10
-    st75256_write_data(lcd, 0xFB);  // Set to x10 boost (0xFA = x8)
-
-    // Back to Extension Command Set 0
-    st75256_write_cmd(lcd, 0x30);   // EXT=0
-
-    // Set Display Address Range
-    st75256_write_cmd(lcd, 0x75);   // Set Page Address (Y-axis)
-    st75256_write_data(lcd, 0x00);  // Start page = 0
-    st75256_write_data(lcd, 0x28);  // End page = 40 (160 rows / 4 = 40 for 4-gray)
-                                     // For monochrome: 160 rows / 8 = 20 pages
-
-    st75256_write_cmd(lcd, 0x15);   // Set Column Address (X-axis)
-    st75256_write_data(lcd, 0x00);  // Start column = 0
-    st75256_write_data(lcd, 0xFF);  // End column = 255 (256 columns)
-
-     // Data Scan Direction (Screen Orientation)
-    st75256_write_cmd(lcd, 0xBC);   // Data Scan Direction
-    st75256_write_data(lcd, 0x00);  // 0x00 = Normal (MX=0, MY=0, MV=0)
-                                     // 0x01 = Mirror X (MX=1)
-                                     // 0x02 = Mirror Y (MY=1)
-                                     // 0x03 = Mirror X+Y (MX=1, MY=1)
-    st75256_write_data(lcd, 0xA6);  // Second parameter (vendor-specific)
-
-    // Display Control
-    st75256_write_cmd(lcd, 0xCA);   // Display Control
-    st75256_write_data(lcd, 0x00);  // CL dividing ratio
-    st75256_write_data(lcd, 0x9F);  // Duty = 160 (0x9F = 159+1)
-    st75256_write_data(lcd, 0x20);  // N-line inversion off
-
-    // Display Mode Selection
-    st75256_write_cmd(lcd, 0xF0);   // Display Mode
-    st75256_write_data(lcd, 0x10);  // 0x10 = Monochrome Mode
-                                     // 0x11 = 4-Gray Mode
-
-    // Contrast/Voltage Control (EV Control)
-    st75256_write_cmd(lcd, 0x81);   // Vop Control
-    st75256_write_data(lcd, 0x38);  // VPR[5:0] = 0x38 (lower 6 bits)
-    st75256_write_data(lcd, 0x04);  // VPR[8:6] = 0x04 (upper 3 bits)
-                                     // Total: 9-bit contrast value                                     
-
-    // Power Control
-    st75256_write_cmd(lcd, 0x20);   // Power Control
-    st75256_write_data(lcd, 0x0B);  // VB ON, VR ON, VF ON
-                                     // Bit 0: Regulator ON
-                                     // Bit 1: Follower ON
-                                     // Bit 3: Booster ON
-    HAL_Delay(10);
-
-    // Data Format Select - CRITICAL FOR BIT ORDER
-    //st75256_write_cmd(lcd, 0x0C);   // Data Format Select
-                                     // Sets LSB (bit 0) at top of 8-pixel page
-                                     // Without this: MSB (bit 7) is at top
-
-    // Display ON
-    st75256_write_cmd(lcd, 0xAF);   // Display ON
-
-    HAL_Delay(100);                 // Stabilization delay
-}
-
 void st75256_write_fb(st75256_t *lcd, const uint8_t *fb)
 {
     st75256_set_window(lcd, 0, 255, 0, 19);
@@ -313,6 +227,91 @@ void st75256_draw_image(st75256_t *dev, const uint8_t *img)
 
     // Отправить все данные (256 * 20 = 5120 байт)
     st75256_write_data_buf(dev, img, 256 * 20);
+}
+
+void st75256_init(st75256_t *lcd)
+{
+    // Hardware Reset Sequence
+    RST_LOW(lcd);
+    HAL_Delay(10);
+    RST_HIGH(lcd);
+    HAL_Delay(10);
+
+    // Extension Command Set 0 (Basic Commands)
+    st75256_write_cmd(lcd, 0x30);   // EXT=0
+    st75256_write_cmd(lcd, 0x94);   // Sleep Out
+    HAL_Delay(50);                  // Wait for oscillator stabilization
+
+    // Extension Command Set 1 (Extended Commands)
+    st75256_write_cmd(lcd, 0x31);   // EXT=1
+    st75256_write_cmd(lcd, 0xD7);   // Auto Read Disable
+    st75256_write_data(lcd, 0x9F);  // Disable auto-read
+
+    // Analog Circuit Configuration
+    st75256_write_cmd(lcd, 0x32);   // Analog SET
+    st75256_write_data(lcd, 0x00);  // OSC Frequency adjustment
+    st75256_write_data(lcd, 0x01);  // Booster efficiency = 6kHz
+    st75256_write_data(lcd, 0x03);  // Bias = 1/11
+
+    // Booster Level (Optional - for better contrast/brightness)
+    st75256_write_cmd(lcd, 0x51);   // Booster Level x10
+    st75256_write_data(lcd, 0xFB);  // Set to x10 boost (0xFA = x8)
+
+    // Back to Extension Command Set 0
+    st75256_write_cmd(lcd, 0x30);   // EXT=0
+
+    // Set Display Address Range
+    st75256_write_cmd(lcd, 0x75);   // Set Page Address (Y-axis)
+    st75256_write_data(lcd, 0x00);  // Start page = 0
+    st75256_write_data(lcd, 0x28);  // End page = 40 (160 rows / 4 = 40 for 4-gray)
+                                     // For monochrome: 160 rows / 8 = 20 pages
+
+    st75256_write_cmd(lcd, 0x15);   // Set Column Address (X-axis)
+    st75256_write_data(lcd, 0x00);  // Start column = 0
+    st75256_write_data(lcd, 0xFF);  // End column = 255 (256 columns)
+
+     // Data Scan Direction (Screen Orientation)
+    st75256_write_cmd(lcd, 0xBC);   // Data Scan Direction
+    st75256_write_data(lcd, 0x00);  // 0x00 = Normal (MX=0, MY=0, MV=0)
+                                     // 0x01 = Mirror X (MX=1)
+                                     // 0x02 = Mirror Y (MY=1)
+                                     // 0x03 = Mirror X+Y (MX=1, MY=1)
+    st75256_write_data(lcd, 0xA6);  // Second parameter (vendor-specific)
+
+    // Display Control
+    st75256_write_cmd(lcd, 0xCA);   // Display Control
+    st75256_write_data(lcd, 0x00);  // CL dividing ratio
+    st75256_write_data(lcd, 0x9F);  // Duty = 160 (0x9F = 159+1)
+    st75256_write_data(lcd, 0x20);  // N-line inversion off
+
+    // Display Mode Selection
+    st75256_write_cmd(lcd, 0xF0);   // Display Mode
+    st75256_write_data(lcd, 0x10);  // 0x10 = Monochrome Mode
+                                     // 0x11 = 4-Gray Mode
+
+    // Contrast/Voltage Control (EV Control)
+    st75256_write_cmd(lcd, 0x81);   // Vop Control
+    st75256_write_data(lcd, 0x38);  // VPR[5:0] = 0x38 (lower 6 bits)
+    st75256_write_data(lcd, 0x04);  // VPR[8:6] = 0x04 (upper 3 bits)
+                                     // Total: 9-bit contrast value                                     
+
+    // Power Control
+    st75256_write_cmd(lcd, 0x20);   // Power Control
+    st75256_write_data(lcd, 0x0B);  // VB ON, VR ON, VF ON
+                                     // Bit 0: Regulator ON
+                                     // Bit 1: Follower ON
+                                     // Bit 3: Booster ON
+    HAL_Delay(10);
+
+    // Data Format Select - CRITICAL FOR BIT ORDER
+    //st75256_write_cmd(lcd, 0x0C);   // Data Format Select
+                                     // Sets LSB (bit 0) at top of 8-pixel page
+                                     // Without this: MSB (bit 7) is at top
+
+    // Display ON
+    st75256_write_cmd(lcd, 0xAF);   // Display ON
+
+    HAL_Delay(100);                 // Stabilization delay
 }
 
 // Исправленный шрифт: буквы развернуты так же, как были цифры в 1-й строке
