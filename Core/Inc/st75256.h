@@ -35,6 +35,9 @@ typedef struct {
     uint8_t invert;          // 0 normal, 1 inverted (A6/A7 related in some controllers)
 } st75256_t;
 
+static st75256_t lcd;
+static uint8_t fb[ST75256_FB_SIZE];
+
 void st75256_init(st75256_t *lcd);
 void st75256_display_on(st75256_t *lcd, uint8_t on);
 void st75256_set_window(st75256_t *lcd,
@@ -50,6 +53,11 @@ void st75256_draw_vline(uint8_t *fb, int x, int y0, int y1, uint8_t on);
 void st75256_test_checkerboard(st75256_t *dev);
 void st75256_test_lcdic_pattern(st75256_t *lcd);
 void st75256_draw_image(st75256_t *dev, const uint8_t *img);
+void fb_draw_parallelogram(uint8_t *fb,
+                           int x0, int y0,
+                           int x1, int y1,
+                           int x2, int y2,
+                           int x3, int y3);
 
 #ifdef __cplusplus
 }

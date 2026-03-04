@@ -173,16 +173,16 @@
      * - gradients use RGB888
      * - bitmaps with transparency may use ARGB8888
      */
-    #define LV_DRAW_SW_SUPPORT_RGB565       1
-    #define LV_DRAW_SW_SUPPORT_RGB565_SWAPPED       1
-    #define LV_DRAW_SW_SUPPORT_RGB565A8     1
-    #define LV_DRAW_SW_SUPPORT_RGB888       1
-    #define LV_DRAW_SW_SUPPORT_XRGB8888     1
-    #define LV_DRAW_SW_SUPPORT_ARGB8888     1
-    #define LV_DRAW_SW_SUPPORT_ARGB8888_PREMULTIPLIED 1
-    #define LV_DRAW_SW_SUPPORT_L8           1
-    #define LV_DRAW_SW_SUPPORT_AL88         1
-    #define LV_DRAW_SW_SUPPORT_A8           1
+    #define LV_DRAW_SW_SUPPORT_RGB565       0
+    #define LV_DRAW_SW_SUPPORT_RGB565_SWAPPED       0
+    #define LV_DRAW_SW_SUPPORT_RGB565A8     0
+    #define LV_DRAW_SW_SUPPORT_RGB888       0
+    #define LV_DRAW_SW_SUPPORT_XRGB8888     0
+    #define LV_DRAW_SW_SUPPORT_ARGB8888     0
+    #define LV_DRAW_SW_SUPPORT_ARGB8888_PREMULTIPLIED 0
+    #define LV_DRAW_SW_SUPPORT_L8           0
+    #define LV_DRAW_SW_SUPPORT_AL88         0
+    #define LV_DRAW_SW_SUPPORT_A8           0
     #define LV_DRAW_SW_SUPPORT_I1           1
 
     /* The threshold of the luminance to consider a pixel as
@@ -203,7 +203,7 @@
     /**
      * - 0: Use a simple renderer capable of drawing only simple rectangles with gradient, images, text, and straight lines only.
      * - 1: Use a complex renderer capable of drawing rounded corners, shadow, skew lines, and arcs too. */
-    #define LV_DRAW_SW_COMPLEX          1
+    #define LV_DRAW_SW_COMPLEX          0
 
     #if LV_DRAW_SW_COMPLEX == 1
         /** Allow buffering some shadow calculation.
@@ -867,7 +867,7 @@
 /* Documentation for themes can be found here: https://docs.lvgl.io/master/common-widget-features/styles/styles.html#themes . */
 
 /** A simple, impressive and very complete theme */
-#define LV_USE_THEME_DEFAULT 1
+#define LV_USE_THEME_DEFAULT 0
 #if LV_USE_THEME_DEFAULT
     /** 0: Light mode; 1: Dark mode */
     #define LV_THEME_DEFAULT_DARK 0
@@ -880,7 +880,7 @@
 #endif /*LV_USE_THEME_DEFAULT*/
 
 /** A very simple theme that is a good starting point for a custom theme */
-#define LV_USE_THEME_SIMPLE 1
+#define LV_USE_THEME_SIMPLE 0
 
 /** A theme designed for monochrome displays */
 #define LV_USE_THEME_MONO 1

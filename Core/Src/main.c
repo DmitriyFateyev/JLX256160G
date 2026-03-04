@@ -25,12 +25,13 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include "st75256.h"
-#include "lv_conf.h"
+#include "lvgl/lvgl.h"
+#include "lv_port_disp.h"
 /* USER CODE END Includes */
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-static st75256_t lcd;
-static uint8_t fb[ST75256_FB_SIZE];
+
+
 /* USER CODE END PTD */
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
@@ -72,21 +73,37 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-lcd.hspi = &hspi1;
-lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;
-lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;
-lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;
-st75256_init(&lcd);
-
-memset(fb, 0, 5120);
-
-st75256_write_fb(&lcd, fb);
+    lv_init();              // Initialise LVGL UI library
+    lv_port_disp_init();    // Initialise the display drivers
+    
+    lv_obj_t * spinner = lv_spinner_create(lv_screen_active());
+    lv_obj_set_size(spinner, 100, 100);
+    lv_obj_center(spinner);
+    lv_spinner_set_anim_params(spinner, 10000, 200);
+    
+    /*
+    lcd.hspi = &hspi1;
+    lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;
+    lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;
+    lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;    
+    st75256_init(&lcd);    
+    memset(fb, 0, 5120);
+    
+    fb_draw_parallelogram(fb,
+    30, 10,    // верх-лево
+    220, 30,   // верх-право
+    180, 120,   // низ-право
+    20,  100     // низ-лево
+);
+    st75256_write_fb(&lcd, fb);
+    */
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      HAL_Delay(250);
+	  HAL_Delay(5);
+      lv_timer_handler();
       HAL_GPIO_TogglePin(BLUE_LED_GPIO_Port, BLUE_LED_Pin);
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */

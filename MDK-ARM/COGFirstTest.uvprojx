@@ -514,6 +514,11 @@
               <FileType>1</FileType>
               <FilePath>..\Core\Src\st75256.c</FilePath>
             </File>
+            <File>
+              <FileName>lv_port_disp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\lv_port_disp.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3503,6 +3508,11 @@
               <FileName>lv_ftsystem.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\lvgl\src\libs\freetype\lv_ftsystem.c</FilePath>
+            </File>
+            <File>
+              <FileName>lv_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Src\lv_conf.h</FilePath>
             </File>
           </Files>
         </Group>
