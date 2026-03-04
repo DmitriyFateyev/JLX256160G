@@ -27,7 +27,8 @@
 #include "st75256.h"
 #include "st75256_font_az_msb.h" 
 #include "image.h"
-
+#include "font_ind_12.h"
+#include "st75256_font_az_msb.h"
 /* USER CODE END Includes */
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
@@ -51,8 +52,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define AZ_E_CAP "\xC6\x8F" // Ə U+018F
-#define AZ_E  "\xC9\x99"   // ə U+0259
 /* USER CODE END 0 */
 
 /**
@@ -76,18 +75,16 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-    lcd.hspi = &hspi1;
-    lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;
-    lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;
-    lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;
-    st75256_init(&lcd);    
-    memset(fb, 0, 5120);
-//    st75256_draw_string_uni(fb, 3, 19, "REJIM:", 7);
-//    st75256_draw_hline(fb, 0, 1);
-//    st75256_draw_vline(fb, 0, 0, 159, 1);
-    st75256_test_checkerboard(&lcd);
-    // Push to display
-    //st75256_write_fb(&lcd, fb);
+lcd.hspi = &hspi1;
+lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;
+lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;
+lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;
+st75256_init(&lcd);
+
+//memset(fb, 0, 5120);
+st75256_test_final(fb);
+
+st75256_write_fb(&lcd, fb);
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -96,7 +93,6 @@ int main(void)
       HAL_Delay(250);
       HAL_GPIO_TogglePin(BLUE_LED_GPIO_Port, BLUE_LED_Pin);
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -148,7 +144,6 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
 /* USER CODE END 4 */
 
 /**

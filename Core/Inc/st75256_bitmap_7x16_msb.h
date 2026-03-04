@@ -170,16 +170,6 @@ static const uint8_t font_bmp[][14] = {
     {0x3F, 0x08, 0x1C, 0x33, 0x21, 0x33, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // 'ю'
     {0x00, 0x19, 0x26, 0x24, 0x24, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // 'я'
 };
-/*
-void st75256_draw_hline(uint8_t *fb, int y) {
-    if (y < 0 || y >= 160) return;
-    int page = y / 8;
-    int bit = y % 8;
-    for (int x = 0; x < 256; x++) {
-        fb[page * 256 + x] |= (1 << bit);
-    }
-}
-*/
 
 void st75256_draw_char_ru(uint8_t *fb, int x, int page, uint16_t unicode) {
     int index = -1;

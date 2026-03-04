@@ -50,6 +50,7 @@ void st75256_draw_vline(uint8_t *fb, int x, int y0, int y1, uint8_t on);
 void st75256_test_checkerboard(st75256_t *dev);
 void st75256_test_lcdic_pattern(st75256_t *lcd);
 void st75256_draw_image(st75256_t *dev, const uint8_t *img);
+void st75256_test_final(uint8_t *fb);
 
 #ifdef __cplusplus
 }
