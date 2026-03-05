@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "st75256.h"
+#include "ui_font_12.h"
 /*********************
  *      DEFINES
  *********************/
@@ -58,6 +59,8 @@ void lv_port_disp_init(void)
     lv_display_t *disp = lv_display_create(MY_DISP_HOR_RES, MY_DISP_VER_RES);
     lv_display_set_color_format(disp, LV_COLOR_FORMAT_I1);
     lv_display_set_flush_cb(disp, disp_flush);
+    lv_theme_t *th = lv_theme_mono_init(disp, false, &lv_font_unscii_8);
+    lv_display_set_theme(disp, th);
 
     LV_ATTRIBUTE_MEM_ALIGN
     lv_display_set_buffers(disp, fb, NULL, sizeof(fb), LV_DISPLAY_RENDER_MODE_FULL);

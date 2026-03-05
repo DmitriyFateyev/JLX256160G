@@ -419,6 +419,11 @@
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f4xx_hal_msp.c</FilePath>
             </File>
+            <File>
+              <FileName>lv_example_1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\lv_example_1.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -518,6 +523,16 @@
               <FileName>lv_port_disp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\lv_port_disp.c</FilePath>
+            </File>
+            <File>
+              <FileName>ui_font_8.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\ui_font_8.c</FilePath>
+            </File>
+            <File>
+              <FileName>ui_font_12.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\ui_font_12.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3519,6 +3534,9 @@
         <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
+        <Group>
+          <GroupName>::Compiler</GroupName>
+        </Group>
       </Groups>
     </Target>
   </Targets>
@@ -3526,8 +3544,14 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="4.3.0" condition="CMSIS Core">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="4.5.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.2.0" condition="ARMv6_7_8-M Device" ymlID="CMSIS:CORE">
+        <package name="CMSIS" schemaVersion="1.7.53" url="https://www.keil.com/pack/" vendor="ARM" version="6.3.0"/>
+        <targetInfos>
+          <targetInfo name="COGFirstTest"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="I/O" Csub="STDOUT" Cvariant="ITM" Cvendor="Keil" Cversion="1.2.0" condition="ARMCC Cortex-M with ITM" ymlID="Compiler&amp;ARM Compiler:I/O:STDOUT&amp;ITM">
+        <package name="ARM_Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="Keil" version="1.7.2"/>
         <targetInfos>
           <targetInfo name="COGFirstTest"/>
         </targetInfos>
