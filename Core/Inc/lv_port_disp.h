@@ -28,7 +28,8 @@ extern "C" {
 /**********************
  *      TYPEDEFS
  **********************/
-
+#include "ui_font_8.h"
+#include "ui_font_12.h"
 /**********************
  * GLOBAL PROTOTYPES
  **********************/

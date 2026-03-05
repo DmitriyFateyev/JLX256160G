@@ -101,29 +101,31 @@ int main(void)
     lv_obj_align(table, LV_ALIGN_TOP_LEFT, 0, 0);
     */
     
-//    lv_obj_t *label1 = lv_label_create(lv_screen_active());
-//    lv_obj_set_style_text_font(label1, &ui_font_8, 0);
-    //lv_label_set_text(label1, "FREQUENCY: 50.0 Hz\nVOLTAGE: 380 V\nCURRENT: 17.5 A\nPOWER: 12.7 kVt\n");    
-//    lv_label_set_text_fmt(label1,  "%-11s%.1f Hz\n%-11s%d V\n%-11s%.1f A\n%-11s%.2f kVt\n",
-//        "FREQUENCY:", 50.0f,
-//        "VOLTAGE:",   380,
-//        "CURRENT:",   17.5f,
-//        "POWER:",     12.7f
-//    );
+    lv_obj_t *label1 = lv_label_create(lv_screen_active());
+    lv_obj_set_style_text_font(label1, &ui_font_12, 0);  
+    lv_label_set_text_fmt(label1,  "%-11s%.1f Hz\n%-11s%d V\n%-11s%.1f A\n%-11s%.2f kVt\n",
+        "FREQUENCY:", 50.0f,
+        "VOLTAGE:",   380,
+        "CURRENT:",   17.5f,
+        "POWER:",     12.7f
+    );
+    lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 5, 5);
     
-    //lv_label_set_text(label1, buf);
-    //lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 5, 5);
     
+    /*
     lv_obj_t * label = lv_label_create(lv_screen_active());
     lv_obj_set_style_text_font(label, &ui_font_12, 0);
+    lv_obj_set_style_pad_all(label, 0, 0);
     //lv_label_set_text(label, "Hello LVGL!");
     lv_label_set_text(label,
-    "EN: Station Status OK\n1234567890\n25.6°C\n"
-    "RU: Состояние станции\n"
-    "AZ: Stansiya vəziyyəti\n"
+    "EN: STATION STATUS: OK\n1234567890\n25.6°C\n"
+    "RU: НАПРЯЖЕНИЕ ЗАГРУЗКА: 68.1%\n"
+    "AZ: STANSİYA VƏZİYYƏTİ\n"
     "Ə ə Ğ ğ İ ı Ö ö Ş ş Ü ü Ç ç"
 );
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+    */
+    
     
     /*
     lcd.hspi = &hspi1;
