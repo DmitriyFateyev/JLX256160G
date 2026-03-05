@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <string.h>
+#include <stdio.h>
 #include "st75256.h"
 #include "lvgl/lvgl.h"
 #include "lv_port_disp.h"
@@ -75,13 +76,21 @@ int main(void)
   /* USER CODE BEGIN 2 */
     lv_port_disp_init();    // Initialise the display drivers
     
-//    lv_obj_t *label = lv_label_create(lv_screen_active());
-//    lv_label_set_text(label, "50.0 Hz  380 V");
-//    lv_obj_align(label, LV_ALIGN_TOP_LEFT, 5, 5);
+    lv_obj_t *label1 = lv_label_create(lv_screen_active());
+    //lv_label_set_text(label1, "FREQUENCY: 50.0 Hz\nVOLTAGE: 380 V\nCURRENT: 17.5 A\nPOWER: 12.7 kVt\n");    
+    lv_label_set_text_fmt(label1,  "%-11s%.1f Hz\n%-11s%d V\n%-11s%.1f A\n%-11s%.2f kVt\n",
+        "FREQUENCY:", 50.0f,
+        "VOLTAGE:",   380,
+        "CURRENT:",   17.5f,
+        "POWER:",     12.7f
+    );
     
-    lv_obj_t * label = lv_label_create(lv_screen_active());
-    lv_label_set_text(label, "Hello LVGL!");
-    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+    //lv_label_set_text(label1, buf);
+    lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 5, 5);
+    
+//    lv_obj_t * label = lv_label_create(lv_screen_active());
+//    lv_label_set_text(label, "Hello LVGL!");
+//    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
     
     /*
     lcd.hspi = &hspi1;

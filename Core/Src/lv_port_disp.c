@@ -113,47 +113,44 @@ static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t 
     if(disp_flush_enabled) {
         /* Skip palette */
         px_map += 8;
-
         /* Ширина строки LVGL в байтах: ceil(256/8) = 32 */
-    const int32_t stride = (MY_DISP_HOR_RES + 7) / 8;  /* 32 */
+        const int32_t stride = (MY_DISP_HOR_RES + 7) / 8;  /* 32 */
 
-    /* Устанавливаем окно на весь экран */
-    st75256_set_window(&lcd, 0, MY_DISP_HOR_RES - 1, 0, (MY_DISP_VER_RES / 8) - 1);
+        /* Устанавливаем окно на весь экран */
+        st75256_set_window(&lcd, 0, MY_DISP_HOR_RES - 1, 0, (MY_DISP_VER_RES / 8) - 1);
 
-    for (int32_t page = 0; page < (MY_DISP_VER_RES / 8); page++)
-    {
-        memset(page_buf, 0x00, sizeof(page_buf));
-
-        for (int32_t col = 0; col < MY_DISP_HOR_RES; col++)
+        for (int32_t page = 0; page < (MY_DISP_VER_RES / 8); page++)
         {
-            /* Какой байт и бит в горизонтальной строке LVGL */
-            int32_t byte_col = col / 8;
-            int32_t bit_mask = 0x80 >> (col % 8);  /* LVGL I1: MSB = leftmost pixel */
+            memset(page_buf, 0x00, sizeof(page_buf));
 
-            uint8_t val = 0;
-
-            for (int32_t bit = 0; bit < 8; bit++)
+            for (int32_t col = 0; col < MY_DISP_HOR_RES; col++)
             {
-                int32_t row = page * 8 + bit;
-                if (row >= MY_DISP_VER_RES) break;
+                /* Какой байт и бит в горизонтальной строке LVGL */
+                int32_t byte_col = col / 8;
+                int32_t bit_mask = 0x80 >> (col % 8);  /* LVGL I1: MSB = leftmost pixel */
 
-                int32_t src_idx = row * stride + byte_col;
+                uint8_t val = 0;
 
-                /* Инвертируем: LVGL 1=белый, ST75256 1=чёрный */
-                if (!(px_map[src_idx] & bit_mask))
+                for (int32_t bit = 0; bit < 8; bit++)
                 {
-                    val |= (0x80 >> bit);
+                    int32_t row = page * 8 + bit;
+                    if (row >= MY_DISP_VER_RES) break;
+
+                    int32_t src_idx = row * stride + byte_col;
+
+                    /* Инвертируем: LVGL 1=белый, ST75256 1=чёрный */
+                    if (!(px_map[src_idx] & bit_mask))
+                    {
+                        val |= (0x80 >> bit);
+                    }
                 }
+                page_buf[col] = val;
             }
-
-            page_buf[col] = val;
+            /* Пишем страницу напрямую в RAM дисплея */
+            st75256_write_data_buf(&lcd, page_buf, MY_DISP_HOR_RES);
         }
-
-        /* Пишем страницу напрямую в RAM дисплея */
-        st75256_write_data_buf(&lcd, page_buf, MY_DISP_HOR_RES);
+        lv_display_flush_ready(disp_drv);
     }
-    lv_display_flush_ready(disp_drv);
-}
 }
 
 #else /*Enable this file at the top*/
