@@ -25,7 +25,7 @@ static void st75256_write_data(st75256_t *lcd, uint8_t data)
     CS_HIGH(lcd);
 }
 
-static void st75256_write_data_buf(st75256_t *lcd, const uint8_t *buf, size_t len)
+void st75256_write_data_buf(st75256_t *lcd, const uint8_t *buf, size_t len)
 {
     CS_LOW(lcd);
     A0_DATA(lcd);

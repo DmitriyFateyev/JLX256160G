@@ -22,7 +22,8 @@ extern "C" {
 #define ST75256_WIDTH   256
 #define ST75256_HEIGHT  160
 #define ST75256_PAGES   (ST75256_HEIGHT/8)       // 20
-#define ST75256_FB_SIZE (ST75256_WIDTH*ST75256_PAGES) // 5120
+/* The buffer should be 8 bytes larger as per the documentation. */   
+#define ST75256_FB_SIZE ((ST75256_WIDTH*ST75256_PAGES) + 8) // 5128 Bytes
 
 typedef struct {
     SPI_HandleTypeDef *hspi;
@@ -47,6 +48,7 @@ void st75256_write_fb(st75256_t *lcd, const uint8_t *fb); // full screen
 void st75256_clear(st75256_t *lcd, uint8_t value);        // value 0x00 or 0xFF
 
 // Pixel helper (1bpp, page-based)
+void st75256_write_data_buf(st75256_t *lcd, const uint8_t *buf, size_t len);
 void st75256_draw_pixel(uint8_t *fb, int x, int y, uint8_t on);
 void st75256_draw_hline(uint8_t *fb, int y, uint8_t on);
 void st75256_draw_vline(uint8_t *fb, int x, int y0, int y1, uint8_t on);

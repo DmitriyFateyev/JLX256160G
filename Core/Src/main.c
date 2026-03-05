@@ -73,13 +73,15 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-    lv_init();              // Initialise LVGL UI library
     lv_port_disp_init();    // Initialise the display drivers
     
-    lv_obj_t * spinner = lv_spinner_create(lv_screen_active());
-    lv_obj_set_size(spinner, 100, 100);
-    lv_obj_center(spinner);
-    lv_spinner_set_anim_params(spinner, 10000, 200);
+//    lv_obj_t *label = lv_label_create(lv_screen_active());
+//    lv_label_set_text(label, "50.0 Hz  380 V");
+//    lv_obj_align(label, LV_ALIGN_TOP_LEFT, 5, 5);
+    
+    lv_obj_t * label = lv_label_create(lv_screen_active());
+    lv_label_set_text(label, "Hello LVGL!");
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
     
     /*
     lcd.hspi = &hspi1;

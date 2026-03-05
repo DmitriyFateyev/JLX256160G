@@ -52,43 +52,15 @@ extern SPI_HandleTypeDef hspi1;
 
 void lv_port_disp_init(void)
 {
-    /*-------------------------
-     * Initialize your display
-     * -----------------------*/
     disp_init();
-
-    /*------------------------------------
-     * Create a display and set a flush_cb
-     * -----------------------------------*/
-    lv_display_t * disp = lv_display_create(MY_DISP_HOR_RES, MY_DISP_VER_RES);
+    lv_init();
+    lv_tick_set_cb(HAL_GetTick);
+    lv_display_t *disp = lv_display_create(MY_DISP_HOR_RES, MY_DISP_VER_RES);
+    lv_display_set_color_format(disp, LV_COLOR_FORMAT_I1);
     lv_display_set_flush_cb(disp, disp_flush);
 
-    /* Example 1
-     * One buffer for partial rendering*/
     LV_ATTRIBUTE_MEM_ALIGN
-    static uint8_t buf_1_1[MY_DISP_HOR_RES * 10 * BYTE_PER_PIXEL];            /*A buffer for 10 rows*/
-    lv_display_set_buffers(disp, buf_1_1, NULL, sizeof(buf_1_1), LV_DISPLAY_RENDER_MODE_PARTIAL);
-
-    /* Example 2
-     * Two buffers for partial rendering
-     * In flush_cb DMA or similar hardware should be used to update the display in the background.*/
-//    LV_ATTRIBUTE_MEM_ALIGN
-//    static uint8_t buf_2_1[MY_DISP_HOR_RES * 10 * BYTE_PER_PIXEL];
-
-//    LV_ATTRIBUTE_MEM_ALIGN
-//    static uint8_t buf_2_2[MY_DISP_HOR_RES * 10 * BYTE_PER_PIXEL];
-//    lv_display_set_buffers(disp, buf_2_1, buf_2_2, sizeof(buf_2_1), LV_DISPLAY_RENDER_MODE_PARTIAL);
-
-    /* Example 3
-     * Two buffers screen sized buffer for double buffering.
-     * Both LV_DISPLAY_RENDER_MODE_DIRECT and LV_DISPLAY_RENDER_MODE_FULL works, see their comments*/
-//    LV_ATTRIBUTE_MEM_ALIGN
-//    static uint8_t buf_3_1[MY_DISP_HOR_RES * MY_DISP_VER_RES * BYTE_PER_PIXEL];
-
-//    LV_ATTRIBUTE_MEM_ALIGN
-//    static uint8_t buf_3_2[MY_DISP_HOR_RES * MY_DISP_VER_RES * BYTE_PER_PIXEL];
-//    lv_display_set_buffers(disp, buf_3_1, buf_3_2, sizeof(buf_3_1), LV_DISPLAY_RENDER_MODE_DIRECT);
-
+    lv_display_set_buffers(disp, fb, NULL, sizeof(fb), LV_DISPLAY_RENDER_MODE_FULL);
 }
 
 /**********************
@@ -124,30 +96,64 @@ void disp_disable_update(void)
     disp_flush_enabled = false;
 }
 
-/*Flush the content of the internal buffer the specific area on the display.
- *`px_map` contains the rendered image as raw pixel map and it should be copied to `area` on the display.
- *You can use DMA or any hardware acceleration to do this operation in the background but
- *'lv_display_flush_ready()' has to be called when it's finished.*/
+/* Buffer for one page of data */
+/* Буфер для одной страницы (256 байт) */
+uint8_t page_buf[ST75256_WIDTH];
+
 static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t * px_map)
 {
+    /* LVGL I1 формат: горизонтальные строки, 1 бит на пиксель, MSB=left.
+     * Первые 8 байт — палитра, пропускаем.
+     *
+     * ST75256: вертикальные страницы по 8 пикселей, MSB=top (bit7 = верхний пиксель).
+     * Формат: page0[col0], page0[col1], ..., page0[col255], page1[col0], ...
+     *
+     * При RENDER_MODE_FULL area покрывает весь экран.
+     */
     if(disp_flush_enabled) {
-        /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-        memset(fb, 0, 5120);
+        /* Skip palette */
+        px_map += 8;
 
-        int32_t x;
-        int32_t y;
-        for(y = area->y1; y <= area->y2; y++) {
-            for(x = area->x1; x <= area->x2; x++) {
-                /*Put a pixel to the display. For example:*/
-                st75256_draw_pixel(fb, x, y, 1); /*put_px(x, y, *px_map)*/
-                px_map++;
+        /* Ширина строки LVGL в байтах: ceil(256/8) = 32 */
+    const int32_t stride = (MY_DISP_HOR_RES + 7) / 8;  /* 32 */
+
+    /* Устанавливаем окно на весь экран */
+    st75256_set_window(&lcd, 0, MY_DISP_HOR_RES - 1, 0, (MY_DISP_VER_RES / 8) - 1);
+
+    for (int32_t page = 0; page < (MY_DISP_VER_RES / 8); page++)
+    {
+        memset(page_buf, 0x00, sizeof(page_buf));
+
+        for (int32_t col = 0; col < MY_DISP_HOR_RES; col++)
+        {
+            /* Какой байт и бит в горизонтальной строке LVGL */
+            int32_t byte_col = col / 8;
+            int32_t bit_mask = 0x80 >> (col % 8);  /* LVGL I1: MSB = leftmost pixel */
+
+            uint8_t val = 0;
+
+            for (int32_t bit = 0; bit < 8; bit++)
+            {
+                int32_t row = page * 8 + bit;
+                if (row >= MY_DISP_VER_RES) break;
+
+                int32_t src_idx = row * stride + byte_col;
+
+                /* Инвертируем: LVGL 1=белый, ST75256 1=чёрный */
+                if (!(px_map[src_idx] & bit_mask))
+                {
+                    val |= (0x80 >> bit);
+                }
             }
+
+            page_buf[col] = val;
         }
+
+        /* Пишем страницу напрямую в RAM дисплея */
+        st75256_write_data_buf(&lcd, page_buf, MY_DISP_HOR_RES);
     }
-    st75256_write_fb(&lcd, fb);
-    /*IMPORTANT!!!
-     *Inform the graphics library that you are ready with the flushing*/
     lv_display_flush_ready(disp_drv);
+}
 }
 
 #else /*Enable this file at the top*/
