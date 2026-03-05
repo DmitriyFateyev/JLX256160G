@@ -76,17 +76,64 @@ int main(void)
   /* USER CODE BEGIN 2 */
     lv_port_disp_init();    // Initialise the display drivers
     
-    lv_obj_t *label1 = lv_label_create(lv_screen_active());
+    lv_obj_t * table = lv_table_create(lv_screen_active());
+
+    /*Fill the first column*/
+    lv_table_set_cell_value(table, 0, 0, "Name");
+    lv_table_set_cell_value(table, 1, 0, "Apple");
+    lv_table_set_cell_value(table, 2, 0, "Banana");
+    lv_table_set_cell_value(table, 3, 0, "Lemon");
+    lv_table_set_cell_value(table, 4, 0, "Grape");
+    lv_table_set_cell_value(table, 5, 0, "Melon");
+    lv_table_set_cell_value(table, 6, 0, "Peach");
+    lv_table_set_cell_value(table, 7, 0, "Nuts");
+
+    /*Fill the second column*/
+    lv_table_set_cell_value(table, 0, 1, "Price");
+    lv_table_set_cell_value(table, 1, 1, "$7");
+    lv_table_set_cell_value(table, 2, 1, "$4");
+    lv_table_set_cell_value(table, 3, 1, "$6");
+    lv_table_set_cell_value(table, 4, 1, "$2");
+    lv_table_set_cell_value(table, 5, 1, "$5");
+    lv_table_set_cell_value(table, 6, 1, "$1");
+    lv_table_set_cell_value(table, 7, 1, "$9");
+
+    /*Set a smaller height to the table. It'll make it scrollable*/
+    lv_obj_set_height(table, 160);
+    lv_obj_center(table);
+    
+    /*
+    lv_obj_t *table = lv_table_create(lv_screen_active());
+    // Заполняем ячейки
+    lv_table_set_cell_value(table, 0, 0, "FREQUENCY:");
+    lv_table_set_cell_value(table, 0, 1, "50.0 Hz");
+
+    lv_table_set_cell_value(table, 1, 0, "VOLTAGE:");
+    lv_table_set_cell_value(table, 1, 1, "380 V");
+
+    lv_table_set_cell_value(table, 2, 0, "CURRENT:");
+    lv_table_set_cell_value(table, 2, 1, "17.5 A");
+
+    lv_table_set_cell_value(table, 3, 0, "POWER:");
+    lv_table_set_cell_value(table, 3, 1, "12.7 kVt");
+
+    // Ширина колонок
+    lv_table_set_col_width(table, 0, 120);
+    lv_table_set_col_width(table, 1, 100);
+    lv_obj_align(table, LV_ALIGN_TOP_LEFT, 0, 0);
+    */
+    
+    //lv_obj_t *label1 = lv_label_create(lv_screen_active());
     //lv_label_set_text(label1, "FREQUENCY: 50.0 Hz\nVOLTAGE: 380 V\nCURRENT: 17.5 A\nPOWER: 12.7 kVt\n");    
-    lv_label_set_text_fmt(label1,  "%-11s%.1f Hz\n%-11s%d V\n%-11s%.1f A\n%-11s%.2f kVt\n",
-        "FREQUENCY:", 50.0f,
-        "VOLTAGE:",   380,
-        "CURRENT:",   17.5f,
-        "POWER:",     12.7f
-    );
+//    lv_label_set_text_fmt(label1,  "%-11s%.1f Hz\n%-11s%d V\n%-11s%.1f A\n%-11s%.2f kVt\n",
+//        "FREQUENCY:", 50.0f,
+//        "VOLTAGE:",   380,
+//        "CURRENT:",   17.5f,
+//        "POWER:",     12.7f
+//    );
     
     //lv_label_set_text(label1, buf);
-    lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 5, 5);
+    //lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 5, 5);
     
 //    lv_obj_t * label = lv_label_create(lv_screen_active());
 //    lv_label_set_text(label, "Hello LVGL!");
