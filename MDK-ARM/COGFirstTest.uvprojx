@@ -424,6 +424,11 @@
               <FileType>1</FileType>
               <FilePath>..\Core\Src\lv_example_1.c</FilePath>
             </File>
+            <File>
+              <FileName>old_code.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\old_code.txt</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

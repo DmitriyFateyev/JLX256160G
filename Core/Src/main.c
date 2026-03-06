@@ -133,128 +133,29 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
     lv_port_disp_init();    // Initialise the display drivers
-    
-    
-    //lv_example_industrial_monitor();
-    
-    
-//    lv_obj_t * label = lv_label_create(lv_screen_active());
-//    lv_obj_set_style_text_font(label, &ui_font_12, 0);
-//    lv_obj_set_style_pad_all(label, 0, 0);
-//    //lv_label_set_text(label, "Hello LVGL!");
-//    lv_label_set_text(label, "Hello Привет ƏəĞğİıÖöŞşÜüÇç");
-//    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
-    /*
-    lcd.hspi = &hspi1;
-    lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;
-    lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;
-    lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;    
-    st75256_init(&lcd);    
-    memset(fb, 0, 5120);
-    
-    //Вызов в main после инициализации:
-    test_draw_char_A(fb, 10, 10);
-    test_draw_char_1(fb, 20, 10);
-    st75256_write_fb(&lcd, fb);
-    */
-    
-    
-    /*
     lv_obj_t *table = lv_table_create(lv_screen_active());
-    // Заполняем ячейки
-    lv_table_set_cell_value(table, 0, 0, "FREQUENCY:");
-    lv_table_set_cell_value(table, 0, 1, "50.0 Hz");
-
-    lv_table_set_cell_value(table, 1, 0, "VOLTAGE:");
-    lv_table_set_cell_value(table, 1, 1, "380 V");
-
-    lv_table_set_cell_value(table, 2, 0, "CURRENT:");
-    lv_table_set_cell_value(table, 2, 1, "17.5 A");
-
-    lv_table_set_cell_value(table, 3, 0, "POWER:");
-    lv_table_set_cell_value(table, 3, 1, "12.7 kVt");
+    lv_obj_set_style_text_font(table, &ui_font_terminus_12, 0);
+    
+    lv_table_set_cell_value(table, 0, 0, "FREQUENCY(Hs)");
+    lv_table_set_cell_value(table, 0, 1, "48.1");
+    lv_table_set_cell_value(table, 1, 0, "VOLTAGE(V)");
+    lv_table_set_cell_value(table, 1, 1, "375");
+    lv_table_set_cell_value(table, 2, 0, "CURRENT(A)");
+    lv_table_set_cell_value(table, 2, 1, "17.5 (max:31.8)");
+    lv_table_set_cell_value(table, 3, 0, "POWER(kVt)");
+    lv_table_set_cell_value(table, 3, 1, "11.6 (max:29.4)");
+    lv_table_set_cell_value(table, 4, 0, "STROKES");
+    lv_table_set_cell_value(table, 4, 1, "7.92  SPM");
+    lv_table_set_cell_value(table, 5, 0, "RUNNING");
+    lv_table_set_cell_value(table, 5, 1, "14 d 21 h");
+    lv_table_set_cell_value(table, 6, 0, "SIGNAL(dBm)");
+    lv_table_set_cell_value(table, 6, 1, "64");
 
     // Ширина колонок
-    lv_table_set_col_width(table, 0, 120);
-    lv_table_set_col_width(table, 1, 100);
+    lv_table_set_col_width(table, 0, 100);
+    lv_table_set_col_width(table, 1, 155);
     lv_obj_align(table, LV_ALIGN_TOP_LEFT, 0, 0);
-    */
-    /*
-    lv_obj_t *label1 = lv_label_create(lv_screen_active());
-    lv_obj_set_style_text_font(label1, &ui_font_terminus_14, 0);  
-    lv_label_set_text_fmt(label1,  "%-14s%.1f Hz\n%-14s%d V\n%-14s%.1f A\n%-14s%.2f kVt\n",
-        "TEZLİK:",      50.0f,
-        "GƏRGİNLİK:",   380,
-        "CƏRƏYAN:",     17.5f,
-        "GÜC:",         12.7f
-    );
-    lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 5, 5);
-    */
-
-//=====================================================================================    
-    // Левая колонка — названия
-    lv_obj_t *label_names = lv_label_create(lv_screen_active());
-    lv_obj_set_style_text_font(label_names, &ui_font_terminus_14, 0);
-    lv_label_set_text(label_names,
-        "ЧАСТОТА:\n"
-        "НАПРЯЖЕНИЕ:\n"
-        "ТОК:\n"
-        "МОЩНОСТЬ:"
-    );
-    lv_obj_align(label_names, LV_ALIGN_TOP_LEFT, 0, 0);
-    
-    // Правая колонка — значения с левым выравниванием
-    lv_obj_t *label_values = lv_label_create(lv_screen_active());
-    lv_obj_set_style_text_font(label_values, &ui_font_terminus_14, 0);
-    lv_label_set_text_fmt(label_values,
-        "%.1f Гц\n"
-        "%d В\n"
-        "%.1f А\n"
-        "%.2f кВт",
-        38.1f, 367, 42.3, 19.5
-    );
-    lv_obj_align(label_values, LV_ALIGN_TOP_LEFT, 140, 0); // подберите X
-    /*
-        lv_label_set_text_fmt(label_values,
-        "%.1f Гц\n"
-        "%d В\n"
-        "%.1f А\n"
-        "%.2f кВт",
-        freq, voltage, current, power
-    );
-    */
-//=====================================================================================    
-
-
-    /*
-    lv_obj_t * label = lv_label_create(lv_screen_active());
-    lv_obj_set_style_text_font(label, &ui_font_terminus_14, 0);
-    //lv_obj_set_style_pad_all(label, 0, 0);
-    lv_label_set_text(label, 
-    "EN: STATION STATUS: OK\n"
-    "RU: НАПРЯЖЕНИЕ ЗАГРУЗКА: 68.1%\n"
-    "AZ: STANSİYA VƏZİYYƏTİ\n"
-    "Ə ə Ğ ğ İ ı Ö ö Ş ş Ü ü Ç ç\n"
-    "1234567890\n25.6°C\n");
-    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
-    */
-    /*
-    lcd.hspi = &hspi1;
-    lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;
-    lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;
-    lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;    
-    st75256_init(&lcd);    
-    memset(fb, 0, 5120);
-    
-    fb_draw_parallelogram(fb,
-    30, 10,    // верх-лево
-    220, 30,   // верх-право
-    180, 120,   // низ-право
-    20,  100     // низ-лево
-);
-    st75256_write_fb(&lcd, fb);
-    */
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
