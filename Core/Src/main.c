@@ -95,10 +95,12 @@ int main(void)
   /* USER CODE BEGIN 2 */
     lv_port_disp_init();
     
+    lv_obj_set_style_bg_color(lv_screen_active(), lv_color_white(), 0);
+    lv_obj_set_style_bg_opa(lv_screen_active(), LV_OPA_COVER, 0);
     lv_obj_t *list = lv_list_create(lv_screen_active());
+    lv_obj_set_style_text_font(list, &ui_font_terminus_12, 0);
     lv_obj_set_size(list, 256, 160);
     lv_obj_align(list, LV_ALIGN_CENTER, 0, 0);
-
     lv_list_add_text(list, "Файлы");
     lv_list_add_button(list, NULL, "Пункт 1");
     lv_list_add_button(list, NULL, "Пункт 2");
@@ -116,8 +118,8 @@ int main(void)
 //    lv_arc_set_value(arc, 10);
 //    lv_obj_center(arc);
 //    lv_label_set_text_fmt(label, "%" LV_PRId32 "%%", lv_arc_get_value(arc));
-    
-    
+//    
+//    
     /*
     lv_obj_t * label = lv_label_create(lv_screen_active());
     lv_obj_set_style_text_font(label, &ui_font_terminus_14, 0);
@@ -140,8 +142,27 @@ int main(void)
           
           if(isDraw)
           {
-              isDraw = 0;              
-              
+              isDraw = 0;
+              // Полностью сбросим тему
+                lv_obj_t * label;
+
+                lv_obj_t * btn1 = lv_button_create(lv_screen_active());
+                lv_obj_align(btn1, LV_ALIGN_CENTER, 0, -40);
+                lv_obj_remove_flag(btn1, LV_OBJ_FLAG_PRESS_LOCK);
+
+                label = lv_label_create(btn1);
+                lv_label_set_text(label, "Button");
+                lv_obj_center(label);
+
+                lv_obj_t * btn2 = lv_button_create(lv_screen_active());
+                lv_obj_align(btn2, LV_ALIGN_CENTER, 0, 40);
+                lv_obj_add_flag(btn2, LV_OBJ_FLAG_CHECKABLE);
+                lv_obj_set_height(btn2, LV_SIZE_CONTENT);
+
+                label = lv_label_create(btn2);
+                lv_label_set_text(label, "Toggle");
+                lv_obj_center(label);
+              /*
               // Тест анимации без дуг — просто движущийся объект
                 lv_obj_t *obj = lv_obj_create(lv_screen_active());
                 lv_obj_set_size(obj, 20, 20);
@@ -152,11 +173,12 @@ int main(void)
                 lv_anim_init(&a);
                 lv_anim_set_var(&a, obj);
                 lv_anim_set_exec_cb(&a, (lv_anim_exec_xcb_t)lv_obj_set_x);
-                lv_anim_set_values(&a, 0, 200);
+                lv_anim_set_values(&a, 0, 256);
                 lv_anim_set_duration(&a, 1000);
                 lv_anim_set_playback_duration(&a, 1000);
                 lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
                 lv_anim_start(&a);
+              */
           }
           HAL_Delay(5);          
           HAL_GPIO_TogglePin(BLUE_LED_GPIO_Port, BLUE_LED_Pin);

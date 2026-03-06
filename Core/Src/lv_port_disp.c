@@ -101,6 +101,7 @@ static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t 
     const int32_t src_stride = w >> 3;
 
     memset(fb, 0x00, ST75256_FB_SIZE);
+    //st75256_clear(&lcd, 0x00);
 
     for(int32_t y = 0; y < h; y++) {
         const int32_t abs_y = area->y1 + y;
