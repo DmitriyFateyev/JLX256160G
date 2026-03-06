@@ -58,6 +58,10 @@ extern void lv_example_industrial_monitor(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 volatile uint8_t isDraw = 0;
+static void set_angle(void * obj, int32_t v)
+{
+    lv_arc_set_value((lv_obj_t *)obj, v);
+}
 /* USER CODE END 0 */
 
 /**
@@ -91,15 +95,27 @@ int main(void)
   /* USER CODE BEGIN 2 */
     lv_port_disp_init();
     
-    lv_obj_t * label = lv_label_create(lv_screen_active());
+    lv_obj_t *list = lv_list_create(lv_screen_active());
+    lv_obj_set_size(list, 256, 160);
+    lv_obj_align(list, LV_ALIGN_CENTER, 0, 0);
 
-    /*Create an Arc*/
-    lv_obj_t * arc = lv_arc_create(lv_screen_active());
-    lv_obj_set_size(arc, 50, 50);
-    lv_arc_set_rotation(arc, 135);
-    lv_arc_set_bg_angles(arc, 0, 270);
-    lv_arc_set_value(arc, 10);
-    lv_obj_center(arc);
+    lv_list_add_text(list, "Файлы");
+    lv_list_add_button(list, NULL, "Пункт 1");
+    lv_list_add_button(list, NULL, "Пункт 2");
+    lv_list_add_text(list, "Устройства");
+    lv_list_add_button(list, NULL, "Пункт 4");
+    lv_list_add_button(list, NULL, "Пункт 5");
+                
+//    lv_obj_t * label = lv_label_create(lv_screen_active());
+
+//    /*Create an Arc*/
+//    lv_obj_t * arc = lv_arc_create(lv_screen_active());
+//    lv_obj_set_size(arc, 50, 50);
+//    lv_arc_set_rotation(arc, 135);
+//    lv_arc_set_bg_angles(arc, 0, 270);
+//    lv_arc_set_value(arc, 10);
+//    lv_obj_center(arc);
+//    lv_label_set_text_fmt(label, "%" LV_PRId32 "%%", lv_arc_get_value(arc));
     
     
     /*
@@ -124,10 +140,23 @@ int main(void)
           
           if(isDraw)
           {
-              isDraw = 0;
-              lv_obj_t *spinner = lv_spinner_create(lv_screen_active());
-              lv_obj_set_size(spinner, 50, 50);  // минимальный размер
-              lv_obj_align(spinner, LV_ALIGN_CENTER, 0, 0);
+              isDraw = 0;              
+              
+              // Тест анимации без дуг — просто движущийся объект
+                lv_obj_t *obj = lv_obj_create(lv_screen_active());
+                lv_obj_set_size(obj, 20, 20);
+                lv_obj_set_style_radius(obj, 0, 0);
+                lv_obj_set_style_bg_color(obj, lv_color_black(), 0);
+
+                lv_anim_t a;
+                lv_anim_init(&a);
+                lv_anim_set_var(&a, obj);
+                lv_anim_set_exec_cb(&a, (lv_anim_exec_xcb_t)lv_obj_set_x);
+                lv_anim_set_values(&a, 0, 200);
+                lv_anim_set_duration(&a, 1000);
+                lv_anim_set_playback_duration(&a, 1000);
+                lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
+                lv_anim_start(&a);
           }
           HAL_Delay(5);          
           HAL_GPIO_TogglePin(BLUE_LED_GPIO_Port, BLUE_LED_Pin);

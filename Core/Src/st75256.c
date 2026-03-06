@@ -26,7 +26,7 @@ void st75256_write_data_buf(st75256_t *lcd, const uint8_t *buf, size_t len)
 {
     //CS_LOW(lcd);
     A0_DATA(lcd);
-    (void)HAL_SPI_Transmit(lcd->hspi, (uint8_t *)buf, (uint16_t)len, HAL_MAX_DELAY);
+    (void)HAL_SPI_Transmit_IT(lcd->hspi, (uint8_t *)buf, (uint16_t)len);
     //CS_HIGH(lcd);
 }
 

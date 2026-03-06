@@ -84,12 +84,16 @@ void disp_disable_update(void)
     disp_flush_enabled = false;
 }
 
+static uint32_t max_conv = 0;
+
 static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t * px_map)
 {
     if(!disp_flush_enabled) {
         lv_display_flush_ready(disp_drv);
         return;
     }
+    
+    uint32_t t1 = HAL_GetTick();
 
     const uint8_t *src = px_map + 8;
     const int32_t w = lv_area_get_width(area);
@@ -121,16 +125,20 @@ static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t 
     }
     st75256_write_fb(&lcd, fb);
     lv_display_flush_ready(disp_drv);
+    uint32_t t2 = HAL_GetTick();
+    if((t2 - t1) > max_conv) {
+        max_conv = t2 - t1;  // breakpoint или watch здесь
+    }
 }
 
-//void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
-//{
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+    lv_display_flush_ready(disp_drv);
 //    if(hspi->Instance == SPI1)
 //    {
-//        CS_HIGH(&lcd);
 //        lv_display_flush_ready(disp_drv);
 //    }
-//}
+}
 
 #else
 typedef int keep_pedantic_happy;
