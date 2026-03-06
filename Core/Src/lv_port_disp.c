@@ -15,18 +15,9 @@
 /*********************
  *      DEFINES
  *********************/
-#ifndef MY_DISP_HOR_RES
-    #warning Please define or replace the macro MY_DISP_HOR_RES with the actual screen width, default value 320 is used for now.
-    #define MY_DISP_HOR_RES    320
-#endif
+#define BYTE_PER_PIXEL (LV_COLOR_FORMAT_GET_SIZE(LV_COLOR_FORMAT_I1))
 
-#ifndef MY_DISP_VER_RES
-    #warning Please define or replace the macro MY_DISP_VER_RES with the actual screen height, default value 240 is used for now.
-    #define MY_DISP_VER_RES    240
-#endif
-
-#define BYTE_PER_PIXEL (LV_COLOR_FORMAT_GET_SIZE(LV_COLOR_FORMAT_I1)) /*will be 2 for RGB565 */
-
+static uint8_t lvgl_buf[LVGL_I1_BUF_SIZE];
 /**********************
  *      TYPEDEFS
  **********************/
@@ -50,6 +41,16 @@ extern SPI_HandleTypeDef hspi1;
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
+static void my_rounder_cb(lv_event_t * e)
+{
+    lv_area_t * area = lv_event_get_param(e);
+    // Округляем X координаты до границ байта (кратность 8)
+    area->x1 = (area->x1 & ~0x7);
+    area->x2 = (area->x2 | 0x7);
+    // Округляем Y (опционально, но полезно для страниц)
+    area->y1 = (area->y1 & ~0x7);
+    area->y2 = (area->y2 | 0x7);
+}
 
 void lv_port_disp_init(void)
 {
@@ -59,11 +60,13 @@ void lv_port_disp_init(void)
     lv_display_t *disp = lv_display_create(MY_DISP_HOR_RES, MY_DISP_VER_RES);
     lv_display_set_color_format(disp, LV_COLOR_FORMAT_I1);
     lv_display_set_flush_cb(disp, disp_flush);
-    lv_theme_t *th = lv_theme_mono_init(disp, false, &ui_font_12);
+    lv_display_add_event_cb(disp, my_rounder_cb, LV_EVENT_INVALIDATE_AREA, NULL);
+    lv_theme_t *th = lv_theme_mono_init(disp, false, &lv_font_unscii_8);
     lv_display_set_theme(disp, th);
 
     LV_ATTRIBUTE_MEM_ALIGN
-    lv_display_set_buffers(disp, fb, NULL, sizeof(fb), LV_DISPLAY_RENDER_MODE_FULL);
+    lv_display_set_buffers(disp, lvgl_buf, NULL, sizeof(lvgl_buf), LV_DISPLAY_RENDER_MODE_FULL);
+    //lv_display_set_buffers(disp, fb, NULL, sizeof(fb), LV_DISPLAY_RENDER_MODE_FULL);
 }
 
 /**********************
@@ -99,61 +102,41 @@ void disp_disable_update(void)
     disp_flush_enabled = false;
 }
 
-/* Buffer for one page of data */
-/* Буфер для одной страницы (256 байт) */
-uint8_t page_buf[ST75256_WIDTH];
-
 static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t * px_map)
 {
-    /* LVGL I1 формат: горизонтальные строки, 1 бит на пиксель, MSB=left.
-     * Первые 8 байт — палитра, пропускаем.
-     *
-     * ST75256: вертикальные страницы по 8 пикселей, MSB=top (bit7 = верхний пиксель).
-     * Формат: page0[col0], page0[col1], ..., page0[col255], page1[col0], ...
-     *
-     * При RENDER_MODE_FULL area покрывает весь экран.
-     */
-    if(disp_flush_enabled) {
-        /* Skip palette */
-        px_map += 8;
-        /* Ширина строки LVGL в байтах: ceil(256/8) = 32 */
-        const int32_t stride = (MY_DISP_HOR_RES + 7) / 8;  /* 32 */
-
-        /* Устанавливаем окно на весь экран */
-        st75256_set_window(&lcd, 0, MY_DISP_HOR_RES - 1, 0, (MY_DISP_VER_RES / 8) - 1);
-
-        for (int32_t page = 0; page < (MY_DISP_VER_RES / 8); page++)
-        {
-            memset(page_buf, 0x00, sizeof(page_buf));
-
-            for (int32_t col = 0; col < MY_DISP_HOR_RES; col++)
-            {
-                /* Какой байт и бит в горизонтальной строке LVGL */
-                int32_t byte_col = col / 8;
-                int32_t bit_mask = 0x80 >> (col % 8);  /* LVGL I1: MSB = leftmost pixel */
-
-                uint8_t val = 0;
-
-                for (int32_t bit = 0; bit < 8; bit++)
-                {
-                    int32_t row = page * 8 + bit;
-                    if (row >= MY_DISP_VER_RES) break;
-
-                    int32_t src_idx = row * stride + byte_col;
-
-                    /* Инвертируем: LVGL 1=белый, ST75256 1=чёрный */
-                    if (!(px_map[src_idx] & bit_mask))
-                    {
-                        val |= (0x80 >> bit);
-                    }
-                }
-                page_buf[col] = val;
-            }
-            /* Пишем страницу напрямую в RAM дисплея */
-            st75256_write_data_buf(&lcd, page_buf, MY_DISP_HOR_RES);
-        }
+    if(!disp_flush_enabled) {
         lv_display_flush_ready(disp_drv);
+        return;
     }
+
+    /* LVGL I1: первые 8 байт — палитра */
+    const uint8_t * src = px_map + 8;
+
+    int32_t w = lv_area_get_width(area);
+    int32_t h = lv_area_get_height(area);
+
+    /* Для I1 ширина области уже округлена до 8 rounder callback'ом */
+    int32_t src_stride = w / 8;
+
+    /* Очистить целевой дисплейный буфер */
+    memset(fb, 0x00, ST75256_FB_SIZE);
+
+    /* Конвертация из row-wise (LVGL) в page-wise (ST75256) */
+    for(int32_t y = 0; y < h; y++) {
+        for(int32_t x = 0; x < w; x++) {
+            uint8_t src_byte = src[y * src_stride + (x >> 3)];
+            uint8_t src_mask = (uint8_t)(0x80u >> (x & 7));
+
+            /* Для вашей панели: 1 = белый, 0 = черный в буфере LVGL темы mono.
+               По фото вы уже выяснили, что нужна инверсия */
+            uint8_t pixel_on = (src_byte & src_mask) ? 0 : 1;
+
+            st75256_draw_pixel(fb, area->x1 + x, area->y1 + y, pixel_on);
+        }
+    }
+
+    st75256_write_fb(&lcd, fb);
+    lv_display_flush_ready(disp_drv);
 }
 
 #else /*Enable this file at the top*/

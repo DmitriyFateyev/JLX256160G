@@ -680,7 +680,7 @@
 
 /** Pixel perfect monospaced fonts */
 #define LV_FONT_UNSCII_8  1
-#define LV_FONT_UNSCII_16 0
+#define LV_FONT_UNSCII_16 1
 /** Optionally declare custom fonts here.
  *
  *  You can use any of these fonts as the default font too and they will be available
@@ -690,10 +690,10 @@
  *  #define LV_FONT_CUSTOM_DECLARE   LV_FONT_DECLARE(ui_font_8) LV_FONT_DECLARE(my_font_2)
  *  @endcode
  */
-#define LV_FONT_CUSTOM_DECLARE LV_FONT_DECLARE(ui_font_12)
+#define LV_FONT_CUSTOM_DECLARE //LV_FONT_DECLARE(ui_font_12)
 
 /** Always set a default font */
-#define LV_FONT_DEFAULT &ui_font_12 //ui_font_12 lv_font_unscii_8
+#define LV_FONT_DEFAULT &lv_font_unscii_8 //ui_font_12 lv_font_unscii_8
 
 /** Enable handling large font and/or fonts with a lot of characters.
  *  The limit depends on the font size, font face and bpp.

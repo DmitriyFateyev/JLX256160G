@@ -23,7 +23,8 @@ extern "C" {
 #define ST75256_HEIGHT  160
 #define ST75256_PAGES   (ST75256_HEIGHT/8)       // 20
 /* The buffer should be 8 bytes larger as per the documentation. */   
-#define ST75256_FB_SIZE ((ST75256_WIDTH*ST75256_PAGES) + 8) // 5128 Bytes
+#define ST75256_FB_SIZE (ST75256_WIDTH*ST75256_PAGES) // 5120 Bytes
+#define LVGL_I1_BUF_SIZE     (ST75256_FB_SIZE + 8)                 // 5128
 
 typedef struct {
     SPI_HandleTypeDef *hspi;

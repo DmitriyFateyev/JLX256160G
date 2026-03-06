@@ -31,10 +31,66 @@
 /* USER CODE END Includes */
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-static void set_angle(void * obj, int32_t v)
-{
-    lv_arc_set_value((lv_obj_t *)obj, v);
+
+// Тест: рисуем букву "A" 8x16 через ваш draw_pixel
+void test_draw_char_A(uint8_t *fb, int x0, int y0) {
+    // Горизонтальный битмап буквы "A" (16 строк x 8 бит, MSB слева)
+    const uint8_t bmp[] = {
+        0x00, // ........
+        0x18, // ...##...
+        0x18, // ...##...
+        0x24, // ..#..#..
+        0x24, // ..#..#..
+        0x42, // .#....#.
+        0x42, // .#....#.
+        0x7E, // .######.
+        0x42, // .#....#.
+        0x42, // .#....#.
+        0x42, // .#....#.
+        0x42, // .#....#.
+        0x00, // ........
+        0x00, // ........
+        0x00, // ........
+        0x00, // ........
+    };
+
+    for (int row = 0; row < 16; row++) {
+        for (int col = 0; col < 8; col++) {
+            uint8_t on = (bmp[row] >> (7 - col)) & 1;
+            st75256_draw_pixel(fb, x0 + col, y0 + row, on);
+        }
+    }
 }
+
+// Тест: рисуем цифру "1" 8x16
+void test_draw_char_1(uint8_t *fb, int x0, int y0) {
+    const uint8_t bmp[] = {
+        0x00, // ........
+        0x18, // ...##...
+        0x38, // ..###...
+        0x18, // ...##...
+        0x18, // ...##...
+        0x18, // ...##...
+        0x18, // ...##...
+        0x18, // ...##...
+        0x18, // ...##...
+        0x18, // ...##...
+        0x18, // ...##...
+        0x7E, // .######.
+        0x00, // ........
+        0x00, // ........
+        0x00, // ........
+        0x00, // ........
+    };
+
+    for (int row = 0; row < 16; row++) {
+        for (int col = 0; col < 8; col++) {
+            uint8_t on = (bmp[row] >> (7 - col)) & 1;
+            st75256_draw_pixel(fb, x0 + col, y0 + row, on);
+        }
+    }
+}
+
 /* USER CODE END PTD */
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
@@ -77,7 +133,19 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
     lv_port_disp_init();    // Initialise the display drivers
+    /*
+    lcd.hspi = &hspi1;
+    lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;
+    lcd.a0_port = GPIOA;  lcd.a0_pin = GPIO_PIN_0;
+    lcd.rst_port= GPIOA;  lcd.rst_pin= GPIO_PIN_1;    
+    st75256_init(&lcd);    
+    memset(fb, 0, 5120);
     
+    //Вызов в main после инициализации:
+    test_draw_char_A(fb, 10, 10);
+    test_draw_char_1(fb, 20, 10);
+    st75256_write_fb(&lcd, fb);
+    */
     //lv_example_industrial_monitor();
     
     /*
@@ -100,9 +168,9 @@ int main(void)
     lv_table_set_col_width(table, 1, 100);
     lv_obj_align(table, LV_ALIGN_TOP_LEFT, 0, 0);
     */
-    
+    /*
     lv_obj_t *label1 = lv_label_create(lv_screen_active());
-    lv_obj_set_style_text_font(label1, &ui_font_12, 0);  
+    lv_obj_set_style_text_font(label1, &lv_font_unscii_8, 0);  
     lv_label_set_text_fmt(label1,  "%-11s%.1f Hz\n%-11s%d V\n%-11s%.1f A\n%-11s%.2f kVt\n",
         "FREQUENCY:", 50.0f,
         "VOLTAGE:",   380,
@@ -110,21 +178,19 @@ int main(void)
         "POWER:",     12.7f
     );
     lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 5, 5);
-    
-    
-    /*
-    lv_obj_t * label = lv_label_create(lv_screen_active());
-    lv_obj_set_style_text_font(label, &ui_font_12, 0);
-    lv_obj_set_style_pad_all(label, 0, 0);
-    //lv_label_set_text(label, "Hello LVGL!");
-    lv_label_set_text(label,
-    "EN: STATION STATUS: OK\n1234567890\n25.6°C\n"
-    "RU: НАПРЯЖЕНИЕ ЗАГРУЗКА: 68.1%\n"
-    "AZ: STANSİYA VƏZİYYƏTİ\n"
-    "Ə ə Ğ ğ İ ı Ö ö Ş ş Ü ü Ç ç"
-);
-    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
     */
+    
+    lv_obj_t * label = lv_label_create(lv_screen_active());
+    lv_obj_set_style_text_font(label, &lv_font_unscii_16, 0);
+    lv_obj_set_style_pad_all(label, 0, 0);
+    lv_label_set_text(label, "Hello LVGL!");
+//    lv_label_set_text(label,
+//    "EN: STATION STATUS: OK\n1234567890\n25.6°C\n"
+//    "RU: НАПРЯЖЕНИЕ ЗАГРУЗКА: 68.1%\n"
+//    "AZ: STANSİYA VƏZİYYƏTİ\n"
+//    "Ə ə Ğ ğ İ ı Ö ö Ş ş Ü ü Ç ç");
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+    
     
     
     /*
