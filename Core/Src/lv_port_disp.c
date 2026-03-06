@@ -12,7 +12,6 @@ static void disp_init(void);
 static void disp_flush(lv_display_t * disp, const lv_area_t * area, uint8_t * px_map);
 
 extern SPI_HandleTypeDef hspi1;
-
 /* Separate LVGL draw buffer.
  * LVGL renders here in I1 horizontal/tiled row-wise format.
  * ST75256 framebuffer `fb` is separate and uses page-oriented vertical layout.
@@ -56,9 +55,6 @@ void lv_port_disp_init(void)
     
     lv_theme_t *th = lv_theme_mono_init(disp, false, &ui_font_terminus_14);
     lv_display_set_theme(disp, th);
-    
-    HAL_Delay(5);
-    lv_timer_handler();
 }
 
 static void disp_init(void)
@@ -126,6 +122,15 @@ static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t 
     st75256_write_fb(&lcd, fb);
     lv_display_flush_ready(disp_drv);
 }
+
+//void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+//{
+//    if(hspi->Instance == SPI1)
+//    {
+//        CS_HIGH(&lcd);
+//        lv_display_flush_ready(disp_drv);
+//    }
+//}
 
 #else
 typedef int keep_pedantic_happy;

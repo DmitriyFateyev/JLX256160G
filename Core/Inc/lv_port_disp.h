@@ -28,6 +28,7 @@ extern "C" {
 /**********************
  *      TYPEDEFS
  **********************/
+static lv_display_t *disp_drv;
 /**********************
  * GLOBAL PROTOTYPES
  **********************/

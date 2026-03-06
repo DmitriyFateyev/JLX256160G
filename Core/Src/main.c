@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "spi.h"
 #include "gpio.h"
 
@@ -30,18 +31,24 @@
 #include "lv_port_disp.h"
 #include <math.h>
 /* USER CODE END Includes */
+
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 /* USER CODE END PTD */
+
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 /* USER CODE END PD */
+
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 /* USER CODE END PM */
+
 /* Private variables ---------------------------------------------------------*/
+
 /* USER CODE BEGIN PV */
 /* USER CODE END PV */
+
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
@@ -59,23 +66,43 @@ volatile uint8_t isDraw = 0;
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
   /* USER CODE END 1 */
+
   /* MCU Configuration--------------------------------------------------------*/
+
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
+
   /* USER CODE BEGIN Init */
   /* USER CODE END Init */
+
   /* Configure the system clock */
   SystemClock_Config();
+
   /* USER CODE BEGIN SysInit */
   /* USER CODE END SysInit */
+
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
     lv_port_disp_init();
     
+    lv_obj_t * label = lv_label_create(lv_screen_active());
+
+    /*Create an Arc*/
+    lv_obj_t * arc = lv_arc_create(lv_screen_active());
+    lv_obj_set_size(arc, 50, 50);
+    lv_arc_set_rotation(arc, 135);
+    lv_arc_set_bg_angles(arc, 0, 270);
+    lv_arc_set_value(arc, 10);
+    lv_obj_center(arc);
+    
+    
+    /*
     lv_obj_t * label = lv_label_create(lv_screen_active());
     lv_obj_set_style_text_font(label, &ui_font_terminus_14, 0);
     //lv_obj_set_style_pad_all(label, 0, 0);
@@ -86,8 +113,9 @@ int main(void)
     "Ə ə Ğ ğ İ ı Ö ö Ş ş Ü ü Ç ç\n"
     "1234567890\n25.6°C\n");
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
-    
+    */
   /* USER CODE END 2 */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
       while (1)
@@ -98,13 +126,14 @@ int main(void)
           {
               isDraw = 0;
               lv_obj_t *spinner = lv_spinner_create(lv_screen_active());
-              lv_obj_set_size(spinner, 20, 20);  // минимальный размер
+              lv_obj_set_size(spinner, 50, 50);  // минимальный размер
               lv_obj_align(spinner, LV_ALIGN_CENTER, 0, 0);
           }
           HAL_Delay(5);          
           HAL_GPIO_TogglePin(BLUE_LED_GPIO_Port, BLUE_LED_Pin);
-        /* USER CODE END WHILE */
-        /* USER CODE BEGIN 3 */
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
       }
   /* USER CODE END 3 */
 }
@@ -155,6 +184,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
 /* USER CODE END 4 */
 
 /**

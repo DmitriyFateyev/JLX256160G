@@ -15,7 +15,7 @@ extern "C" {
 
 #define ST75256_FB_SIZE      (ST75256_WIDTH * ST75256_PAGES)   /* 5120 */
 #define LVGL_I1_BUF_SIZE     (ST75256_FB_SIZE + 8)             /* 5128 */
-
+   
 typedef struct {
     SPI_HandleTypeDef *hspi;
 
@@ -30,6 +30,13 @@ typedef struct {
 
     uint8_t invert;
 } st75256_t;
+
+//static inline void CS_LOW(st75256_t *lcd)  { HAL_GPIO_WritePin(lcd->cs_port,  lcd->cs_pin,  GPIO_PIN_RESET); }
+//static inline void CS_HIGH(st75256_t *lcd) { HAL_GPIO_WritePin(lcd->cs_port,  lcd->cs_pin,  GPIO_PIN_SET);   }
+static inline void A0_CMD(st75256_t *lcd)  { HAL_GPIO_WritePin(lcd->a0_port,  lcd->a0_pin,  GPIO_PIN_RESET); }
+static inline void A0_DATA(st75256_t *lcd) { HAL_GPIO_WritePin(lcd->a0_port,  lcd->a0_pin,  GPIO_PIN_SET);   }
+static inline void RST_LOW(st75256_t *lcd) { HAL_GPIO_WritePin(lcd->rst_port, lcd->rst_pin, GPIO_PIN_RESET); }
+static inline void RST_HIGH(st75256_t *lcd){ HAL_GPIO_WritePin(lcd->rst_port, lcd->rst_pin, GPIO_PIN_SET);   }
 
 /* One global display instance and one real framebuffer */
 extern st75256_t lcd;
