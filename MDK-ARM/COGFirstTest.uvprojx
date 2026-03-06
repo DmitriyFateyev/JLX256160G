@@ -554,6 +554,11 @@
               <FileType>1</FileType>
               <FilePath>..\Core\Src\ui_font_terminus_12.c</FilePath>
             </File>
+            <File>
+              <FileName>ui_font_terminus_13.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\ui_font_terminus_13.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
