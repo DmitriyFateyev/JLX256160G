@@ -27,7 +27,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "main.h"
-#include "ui_font_8.h"
 #include "ui_font_12.h"
 /* ── Forward declarations ─────────────────────────────── */
 static void create_main_screen(void);

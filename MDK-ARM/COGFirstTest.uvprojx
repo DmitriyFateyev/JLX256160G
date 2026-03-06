@@ -525,14 +525,14 @@
               <FilePath>..\Core\Src\lv_port_disp.c</FilePath>
             </File>
             <File>
-              <FileName>ui_font_8.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\ui_font_8.c</FilePath>
-            </File>
-            <File>
               <FileName>ui_font_12.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\ui_font_12.c</FilePath>
+            </File>
+            <File>
+              <FileName>ui_font_unifont_16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\ui_font_unifont_16.c</FilePath>
             </File>
           </Files>
         </Group>

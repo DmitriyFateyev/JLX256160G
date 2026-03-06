@@ -51,7 +51,7 @@ void lv_port_disp_init(void)
     lv_display_set_flush_cb(disp, disp_flush);
     lv_display_add_event_cb(disp, my_rounder_cb, LV_EVENT_INVALIDATE_AREA, NULL);
 
-    lv_theme_t * th = lv_theme_mono_init(disp, false, &lv_font_unscii_8);
+    lv_theme_t * th = lv_theme_mono_init(disp, false, &ui_font_unifont_16);
     lv_display_set_theme(disp, th);
 
     /* Buffer must be 8 bytes larger in LVGL I1 mode */
