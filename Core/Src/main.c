@@ -180,18 +180,18 @@ int main(void)
     lv_table_set_col_width(table, 1, 100);
     lv_obj_align(table, LV_ALIGN_TOP_LEFT, 0, 0);
     */
-    /*
+    
     lv_obj_t *label1 = lv_label_create(lv_screen_active());
-    lv_obj_set_style_text_font(label1, &lv_font_unscii_8, 0);  
+    lv_obj_set_style_text_font(label1, &ui_font_terminus_14, 0);  
     lv_label_set_text_fmt(label1,  "%-11s%.1f Hz\n%-11s%d V\n%-11s%.1f A\n%-11s%.2f kVt\n",
-        "FREQUENCY:", 50.0f,
-        "VOLTAGE:",   380,
-        "CURRENT:",   17.5f,
-        "POWER:",     12.7f
+        "TEZLİK:", 50.0f,
+        "GƏRGİNLİK:",   380,
+        "CƏRƏYAN:",   17.5f,
+        "GÜC:",     12.7f
     );
     lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 5, 5);
-    */
     
+    /*
     lv_obj_t * label = lv_label_create(lv_screen_active());
     lv_obj_set_style_text_font(label, &ui_font_terminus_14, 0);
     //lv_obj_set_style_pad_all(label, 0, 0);
@@ -202,7 +202,7 @@ int main(void)
     "Ə ə Ğ ğ İ ı Ö ö Ş ş Ü ü Ç ç\n"
     "1234567890\n25.6°C\n");
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
-    
+    */
     /*
     lcd.hspi = &hspi1;
     lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;
