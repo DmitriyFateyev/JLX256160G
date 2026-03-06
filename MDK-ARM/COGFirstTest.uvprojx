@@ -534,6 +534,16 @@
               <FileType>1</FileType>
               <FilePath>..\Core\Src\ui_font_unifont_16.c</FilePath>
             </File>
+            <File>
+              <FileName>ui_font_unifont_14.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\ui_font_unifont_14.c</FilePath>
+            </File>
+            <File>
+              <FileName>ui_font_noto_medium_14.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\ui_font_noto_medium_14.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
