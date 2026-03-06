@@ -203,19 +203,18 @@ int main(void)
         "МОЩНОСТЬ:"
     );
     lv_obj_align(label_names, LV_ALIGN_TOP_LEFT, 0, 0);
-
-    // Правая колонка — значения (выровнены по правому краю)
+    
+    // Правая колонка — значения с левым выравниванием
     lv_obj_t *label_values = lv_label_create(lv_screen_active());
     lv_obj_set_style_text_font(label_values, &ui_font_terminus_14, 0);
-    lv_obj_set_style_text_align(label_values, LV_TEXT_ALIGN_RIGHT, 0);
     lv_label_set_text_fmt(label_values,
-        "41.6 Гц\n"
-        "367 В\n"
-        "42.3 А\n"
-        "26.70 кВт"
+        "%.1f Гц\n"
+        "%d В\n"
+        "%.1f А\n"
+        "%.2f кВт",
+        38.1f, 367, 42.3, 19.5
     );
-    // Прибиваем правую колонку к правому краю экрана
-    lv_obj_align(label_values, LV_ALIGN_TOP_RIGHT, 0, 0);    
+    lv_obj_align(label_values, LV_ALIGN_TOP_LEFT, 140, 0); // подберите X
     /*
         lv_label_set_text_fmt(label_values,
         "%.1f Гц\n"

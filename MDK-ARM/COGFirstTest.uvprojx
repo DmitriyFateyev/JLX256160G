@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>3</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -523,26 +523,6 @@
               <FileName>lv_port_disp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\lv_port_disp.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_font_12.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\ui_font_12.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_font_unifont_16.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\ui_font_unifont_16.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_font_unifont_14.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\ui_font_unifont_14.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_font_noto_medium_14.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\ui_font_noto_medium_14.c</FilePath>
             </File>
             <File>
               <FileName>ui_font_terminus_14.c</FileName>

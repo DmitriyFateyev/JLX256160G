@@ -27,7 +27,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "main.h"
-#include "ui_font_12.h"
 /* ── Forward declarations ─────────────────────────────── */
 static void create_main_screen(void);
 static void update_timer_cb(lv_timer_t * timer);
@@ -117,7 +116,7 @@ static lv_obj_t * add_row_label(lv_obj_t * parent, int32_t y, const char * txt)
     lv_obj_t * lbl = lv_label_create(parent);
     lv_label_set_text(lbl, txt);
     lv_obj_set_pos(lbl, 2, y);
-    lv_obj_set_style_text_font(lbl, &ui_font_12, 0);
+    lv_obj_set_style_text_font(lbl, &ui_font_terminus_14, 0);
     lv_obj_set_style_text_color(lbl, lv_color_black(), 0);
     return lbl;
 }
@@ -147,12 +146,12 @@ static void create_main_screen(void)
     lv_obj_t * lbl_title = lv_label_create(scr);
     lv_label_set_text(lbl_title, "STATION STATUS");
     lv_obj_set_pos(lbl_title, 2, 1);
-    lv_obj_set_style_text_font(lbl_title, &ui_font_12, 0);
+    lv_obj_set_style_text_font(lbl_title, &ui_font_terminus_14, 0);
     lv_obj_set_style_text_color(lbl_title, lv_color_black(), 0);
 
     /* Status indicator: RUN/STOP */
     lbl_status_ind = lv_label_create(scr);
-    lv_obj_set_style_text_font(lbl_status_ind, &ui_font_12, 0);
+    lv_obj_set_style_text_font(lbl_status_ind, &ui_font_terminus_14, 0);
     lv_obj_set_style_text_color(lbl_status_ind, lv_color_black(), 0);
     lv_label_set_text(lbl_status_ind, g_data.running ? "PED:ON  AUTO" : "PED:OFF MANUAL");
     lv_obj_set_pos(lbl_status_ind, 130, 1);
