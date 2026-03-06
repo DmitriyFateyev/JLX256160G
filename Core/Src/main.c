@@ -180,17 +180,54 @@ int main(void)
     lv_table_set_col_width(table, 1, 100);
     lv_obj_align(table, LV_ALIGN_TOP_LEFT, 0, 0);
     */
-    
+    /*
     lv_obj_t *label1 = lv_label_create(lv_screen_active());
     lv_obj_set_style_text_font(label1, &ui_font_terminus_14, 0);  
-    lv_label_set_text_fmt(label1,  "%-11s%.1f Hz\n%-11s%d V\n%-11s%.1f A\n%-11s%.2f kVt\n",
-        "TEZLİK:", 50.0f,
+    lv_label_set_text_fmt(label1,  "%-14s%.1f Hz\n%-14s%d V\n%-14s%.1f A\n%-14s%.2f kVt\n",
+        "TEZLİK:",      50.0f,
         "GƏRGİNLİK:",   380,
-        "CƏRƏYAN:",   17.5f,
-        "GÜC:",     12.7f
+        "CƏRƏYAN:",     17.5f,
+        "GÜC:",         12.7f
     );
     lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 5, 5);
-    
+    */
+
+//=====================================================================================    
+    // Левая колонка — названия
+    lv_obj_t *label_names = lv_label_create(lv_screen_active());
+    lv_obj_set_style_text_font(label_names, &ui_font_terminus_14, 0);
+    lv_label_set_text(label_names,
+        "ЧАСТОТА:\n"
+        "НАПРЯЖЕНИЕ:\n"
+        "ТОК:\n"
+        "МОЩНОСТЬ:"
+    );
+    lv_obj_align(label_names, LV_ALIGN_TOP_LEFT, 0, 0);
+
+    // Правая колонка — значения (выровнены по правому краю)
+    lv_obj_t *label_values = lv_label_create(lv_screen_active());
+    lv_obj_set_style_text_font(label_values, &ui_font_terminus_14, 0);
+    lv_obj_set_style_text_align(label_values, LV_TEXT_ALIGN_RIGHT, 0);
+    lv_label_set_text_fmt(label_values,
+        "41.6 Гц\n"
+        "367 В\n"
+        "42.3 А\n"
+        "26.70 кВт"
+    );
+    // Прибиваем правую колонку к правому краю экрана
+    lv_obj_align(label_values, LV_ALIGN_TOP_RIGHT, 0, 0);    
+    /*
+        lv_label_set_text_fmt(label_values,
+        "%.1f Гц\n"
+        "%d В\n"
+        "%.1f А\n"
+        "%.2f кВт",
+        freq, voltage, current, power
+    );
+    */
+//=====================================================================================    
+
+
     /*
     lv_obj_t * label = lv_label_create(lv_screen_active());
     lv_obj_set_style_text_font(label, &ui_font_terminus_14, 0);
