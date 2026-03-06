@@ -1,12 +1,3 @@
-/**
-  ******************************************************************************
-  * @file           : st75256.h
-  * @brief          : Header for st75256.c file.
-  *                   This file contains the common defines of the application.
-  ******************************************************************************
-  */
-
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __ST75256_H
 #define __ST75256_H
 
@@ -14,48 +5,56 @@
 extern "C" {
 #endif
 
-/* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
+#include <stddef.h>
+#include <stdint.h>
 
-
-/* Private defines -----------------------------------------------------------*/
 #define ST75256_WIDTH   256
 #define ST75256_HEIGHT  160
-#define ST75256_PAGES   (ST75256_HEIGHT/8)       // 20
-/* The buffer should be 8 bytes larger as per the documentation. */   
-#define ST75256_FB_SIZE (ST75256_WIDTH*ST75256_PAGES) // 5120 Bytes
-#define LVGL_I1_BUF_SIZE     (ST75256_FB_SIZE + 8)                 // 5128
+#define ST75256_PAGES   (ST75256_HEIGHT / 8)         /* 20 */
+
+#define ST75256_FB_SIZE      (ST75256_WIDTH * ST75256_PAGES)   /* 5120 */
+#define LVGL_I1_BUF_SIZE     (ST75256_FB_SIZE + 8)             /* 5128 */
 
 typedef struct {
     SPI_HandleTypeDef *hspi;
 
-    GPIO_TypeDef *cs_port;   uint16_t cs_pin;
-    GPIO_TypeDef *a0_port;   uint16_t a0_pin;   // A0/RS: 0=cmd, 1=data
-    GPIO_TypeDef *rst_port;  uint16_t rst_pin;
+    GPIO_TypeDef *cs_port;
+    uint16_t cs_pin;
 
-    // Optional: if your panel needs it
-    uint8_t invert;          // 0 normal, 1 inverted (A6/A7 related in some controllers)
+    GPIO_TypeDef *a0_port;
+    uint16_t a0_pin;
+
+    GPIO_TypeDef *rst_port;
+    uint16_t rst_pin;
+
+    uint8_t invert;
 } st75256_t;
 
-static st75256_t lcd;
-static uint8_t fb[ST75256_FB_SIZE];
+/* One global display instance and one real framebuffer */
+extern st75256_t lcd;
+extern uint8_t fb[ST75256_FB_SIZE];
 
 void st75256_init(st75256_t *lcd);
 void st75256_display_on(st75256_t *lcd, uint8_t on);
+
 void st75256_set_window(st75256_t *lcd,
                         uint8_t col_start, uint8_t col_end,
                         uint8_t page_start, uint8_t page_end);
-void st75256_write_fb(st75256_t *lcd, const uint8_t *fb); // full screen
-void st75256_clear(st75256_t *lcd, uint8_t value);        // value 0x00 or 0xFF
 
-// Pixel helper (1bpp, page-based)
+void st75256_write_fb(st75256_t *lcd, const uint8_t *fb);
+void st75256_clear(st75256_t *lcd, uint8_t value);
+
 void st75256_write_data_buf(st75256_t *lcd, const uint8_t *buf, size_t len);
+
 void st75256_draw_pixel(uint8_t *fb, int x, int y, uint8_t on);
 void st75256_draw_hline(uint8_t *fb, int y, uint8_t on);
 void st75256_draw_vline(uint8_t *fb, int x, int y0, int y1, uint8_t on);
+
 void st75256_test_checkerboard(st75256_t *dev);
 void st75256_test_lcdic_pattern(st75256_t *lcd);
 void st75256_draw_image(st75256_t *dev, const uint8_t *img);
+
 void fb_draw_parallelogram(uint8_t *fb,
                            int x0, int y0,
                            int x1, int y1,

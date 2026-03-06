@@ -133,6 +133,13 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
     lv_port_disp_init();    // Initialise the display drivers
+    
+    lv_obj_t * label = lv_label_create(lv_screen_active());
+    lv_obj_set_style_text_font(label, &lv_font_unscii_8, 0);
+    lv_obj_set_style_pad_all(label, 0, 0);
+    lv_label_set_text(label, "Hello LVGL!");
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+
     /*
     lcd.hspi = &hspi1;
     lcd.cs_port = GPIOA;  lcd.cs_pin = GPIO_PIN_4;
@@ -180,16 +187,18 @@ int main(void)
     lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 5, 5);
     */
     
-    lv_obj_t * label = lv_label_create(lv_screen_active());
-    lv_obj_set_style_text_font(label, &lv_font_unscii_16, 0);
-    lv_obj_set_style_pad_all(label, 0, 0);
-    lv_label_set_text(label, "Hello LVGL!");
+    
+    
+//    lv_obj_t * label = lv_label_create(lv_screen_active());
+//    lv_obj_set_style_text_font(label, &lv_font_unscii_16, 0);
+//    lv_obj_set_style_pad_all(label, 0, 0);
+//    lv_label_set_text(label, "Hello LVGL!");
 //    lv_label_set_text(label,
 //    "EN: STATION STATUS: OK\n1234567890\n25.6°C\n"
 //    "RU: НАПРЯЖЕНИЕ ЗАГРУЗКА: 68.1%\n"
 //    "AZ: STANSİYA VƏZİYYƏTİ\n"
 //    "Ə ə Ğ ğ İ ı Ö ö Ş ş Ü ü Ç ç");
-    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+//    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
     
     
     
