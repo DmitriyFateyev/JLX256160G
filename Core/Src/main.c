@@ -193,7 +193,7 @@ int main(void)
     */
     
     lv_obj_t * label = lv_label_create(lv_screen_active());
-    lv_obj_set_style_text_font(label, &ui_font_noto_medium_14, 0);
+    lv_obj_set_style_text_font(label, &ui_font_terminus_14, 0);
     //lv_obj_set_style_pad_all(label, 0, 0);
     lv_label_set_text(label, 
     "EN: STATION STATUS: OK\n1234567890\n25.6°C\n"
