@@ -94,30 +94,33 @@ static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t 
         lv_display_flush_ready(disp_drv);
         return;
     }
-    /* LVGL I1 documentation:
-       first 8 bytes are reserved palette/header area */
-    const uint8_t * src = px_map + 8;
 
+    const uint8_t *src = px_map + 8;
     const int32_t w = lv_area_get_width(area);
     const int32_t h = lv_area_get_height(area);
-
-    /* Since x is rounded to byte boundaries, width should be multiple of 8 */
     const int32_t src_stride = w >> 3;
 
-    /* FULL mode: convert the whole frame every flush */
     memset(fb, 0x00, ST75256_FB_SIZE);
 
     for(int32_t y = 0; y < h; y++) {
-        for(int32_t x = 0; x < w; x++) {
-            const uint8_t src_byte = src[y * src_stride + (x >> 3)];
-            const uint8_t src_mask = (uint8_t)(0x80u >> (x & 0x7));
-            /* LVGL I1:
-               bit=1 means foreground pixel in the draw buffer.
-               Your display test showed that inverted mapping gives correct white background.
-             */
-            const uint8_t pixel_on = (src_byte & src_mask) ? 0u : 1u;
+        const int32_t abs_y = area->y1 + y;
+        const int32_t page  = abs_y >> 3;
+        const uint8_t bit   = abs_y & 7;
+        // ST75256: MSB = верхний пиксель страницы
+        const uint8_t dst_mask_on  = (uint8_t)(0x80u >> bit);
+        const uint8_t dst_mask_off = ~dst_mask_on;
 
-            st75256_draw_pixel(fb, area->x1 + x, area->y1 + y, pixel_on);
+        const uint8_t *src_row = src + y * src_stride;
+        uint8_t       *dst_row = fb  + page * ST75256_WIDTH + area->x1;
+
+        for(int32_t x = 0; x < w; x++) {
+            const uint8_t src_byte = src_row[x >> 3];
+            const uint8_t src_mask = (uint8_t)(0x80u >> (x & 7));
+            // инверсия: LVGL 1=foreground(тёмный), ST75256 1=пиксель включён(тёмный)
+            if(src_byte & src_mask)
+                dst_row[x] &= dst_mask_off; // пиксель выключен = белый фон
+            else
+                dst_row[x] |= dst_mask_on;  // пиксель включён = тёмный
         }
     }
     st75256_write_fb(&lcd, fb);
