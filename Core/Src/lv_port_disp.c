@@ -41,21 +41,24 @@ static void my_rounder_cb(lv_event_t * e)
 
 void lv_port_disp_init(void)
 {
-    disp_init();
-
     lv_init();
+    disp_init();
     lv_tick_set_cb(HAL_GetTick);
 
     lv_display_t * disp = lv_display_create(MY_DISP_HOR_RES, MY_DISP_VER_RES);
     lv_display_set_color_format(disp, LV_COLOR_FORMAT_I1);
     lv_display_set_flush_cb(disp, disp_flush);
+    
     lv_display_add_event_cb(disp, my_rounder_cb, LV_EVENT_INVALIDATE_AREA, NULL);
-
-    lv_theme_t * th = lv_theme_mono_init(disp, false, &ui_font_terminus_14);
-    lv_display_set_theme(disp, th);
-
+    
     /* Buffer must be 8 bytes larger in LVGL I1 mode */
     lv_display_set_buffers(disp, lvgl_buf, NULL, sizeof(lvgl_buf), LV_DISPLAY_RENDER_MODE_FULL);
+    
+    lv_theme_t *th = lv_theme_mono_init(disp, false, &ui_font_terminus_14);
+    lv_display_set_theme(disp, th);
+    
+    HAL_Delay(5);
+    lv_timer_handler();
 }
 
 static void disp_init(void)
@@ -91,7 +94,6 @@ static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t 
         lv_display_flush_ready(disp_drv);
         return;
     }
-
     /* LVGL I1 documentation:
        first 8 bytes are reserved palette/header area */
     const uint8_t * src = px_map + 8;
@@ -109,7 +111,6 @@ static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t 
         for(int32_t x = 0; x < w; x++) {
             const uint8_t src_byte = src[y * src_stride + (x >> 3)];
             const uint8_t src_mask = (uint8_t)(0x80u >> (x & 0x7));
-
             /* LVGL I1:
                bit=1 means foreground pixel in the draw buffer.
                Your display test showed that inverted mapping gives correct white background.
@@ -119,7 +120,6 @@ static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t 
             st75256_draw_pixel(fb, area->x1 + x, area->y1 + y, pixel_on);
         }
     }
-
     st75256_write_fb(&lcd, fb);
     lv_display_flush_ready(disp_drv);
 }

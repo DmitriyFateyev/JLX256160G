@@ -141,7 +141,37 @@
     lv_table_set_cell_value(table, 5, 0, "İŞLƏYİR");
     lv_table_set_cell_value(table, 5, 1, "14 ğün 21 saat");
 //=====================================================================================    
+/*
+    lv_obj_t *table = lv_table_create(lv_screen_active());
+    lv_obj_set_style_text_font(table, &ui_font_terminus_12, 0);
+    lv_obj_set_style_border_width(table, 1, LV_PART_MAIN);
+    lv_obj_set_style_border_color(table, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_border_side(table, LV_BORDER_SIDE_FULL, LV_PART_MAIN);
+    lv_obj_set_style_outline_width(table, 0, LV_PART_MAIN);
+    // Убираем padding чтобы рамка совпадала с сеткой
+    lv_obj_set_style_pad_all(table, 0, LV_PART_MAIN);
     
+    lv_table_set_cell_value(table, 0, 0, "FREQUENCY (Hs)");
+    lv_table_set_cell_value(table, 0, 1, "48.1");
+    lv_table_set_cell_value(table, 1, 0, "VOLTAGE (V)");
+    lv_table_set_cell_value(table, 1, 1, "375");
+    lv_table_set_cell_value(table, 2, 0, "CURRENT (A)");
+    lv_table_set_cell_value(table, 2, 1, "17.5 (max:31.8)");
+    lv_table_set_cell_value(table, 3, 0, "POWER (kVt)");
+    lv_table_set_cell_value(table, 3, 1, "11.6 (max:29.4)");
+    lv_table_set_cell_value(table, 4, 0, "STROKES");
+    lv_table_set_cell_value(table, 4, 1, "7.92 SPM");
+    lv_table_set_cell_value(table, 5, 0, "RUNNING");
+    lv_table_set_cell_value(table, 5, 1, "14d 21h");
+    lv_table_set_cell_value(table, 6, 0, "SIGNAL(dBm)");
+    lv_table_set_cell_value(table, 6, 1, "64");
+
+    // Ширина колонок
+    lv_table_set_col_width(table, 0, 100);
+    lv_table_set_col_width(table, 1, 155);
+    lv_obj_align(table, LV_ALIGN_TOP_LEFT, 0, 0);
+*/
+//=====================================================================================    
     
     
     

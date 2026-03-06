@@ -28,69 +28,10 @@
 #include "st75256.h"
 #include "lvgl/lvgl.h"
 #include "lv_port_disp.h"
+#include <math.h>
 /* USER CODE END Includes */
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
-// Тест: рисуем букву "A" 8x16 через ваш draw_pixel
-void test_draw_char_A(uint8_t *fb, int x0, int y0) {
-    // Горизонтальный битмап буквы "A" (16 строк x 8 бит, MSB слева)
-    const uint8_t bmp[] = {
-        0x00, // ........
-        0x18, // ...##...
-        0x18, // ...##...
-        0x24, // ..#..#..
-        0x24, // ..#..#..
-        0x42, // .#....#.
-        0x42, // .#....#.
-        0x7E, // .######.
-        0x42, // .#....#.
-        0x42, // .#....#.
-        0x42, // .#....#.
-        0x42, // .#....#.
-        0x00, // ........
-        0x00, // ........
-        0x00, // ........
-        0x00, // ........
-    };
-
-    for (int row = 0; row < 16; row++) {
-        for (int col = 0; col < 8; col++) {
-            uint8_t on = (bmp[row] >> (7 - col)) & 1;
-            st75256_draw_pixel(fb, x0 + col, y0 + row, on);
-        }
-    }
-}
-
-// Тест: рисуем цифру "1" 8x16
-void test_draw_char_1(uint8_t *fb, int x0, int y0) {
-    const uint8_t bmp[] = {
-        0x00, // ........
-        0x18, // ...##...
-        0x38, // ..###...
-        0x18, // ...##...
-        0x18, // ...##...
-        0x18, // ...##...
-        0x18, // ...##...
-        0x18, // ...##...
-        0x18, // ...##...
-        0x18, // ...##...
-        0x18, // ...##...
-        0x7E, // .######.
-        0x00, // ........
-        0x00, // ........
-        0x00, // ........
-        0x00, // ........
-    };
-
-    for (int row = 0; row < 16; row++) {
-        for (int col = 0; col < 8; col++) {
-            uint8_t on = (bmp[row] >> (7 - col)) & 1;
-            st75256_draw_pixel(fb, x0 + col, y0 + row, on);
-        }
-    }
-}
-
 /* USER CODE END PTD */
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
@@ -109,6 +50,7 @@ extern void lv_example_industrial_monitor(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+volatile uint8_t isDraw = 0;
 /* USER CODE END 0 */
 
 /**
@@ -134,39 +76,27 @@ int main(void)
   /* USER CODE BEGIN 2 */
     lv_port_disp_init();    // Initialise the display drivers
 
-    lv_obj_t *table = lv_table_create(lv_screen_active());
-    lv_obj_set_style_text_font(table, &ui_font_terminus_12, 0);
+    volatile float test = sinf(1.234f);
     
-    lv_table_set_cell_value(table, 0, 0, "FREQUENCY(Hs)");
-    lv_table_set_cell_value(table, 0, 1, "48.1");
-    lv_table_set_cell_value(table, 1, 0, "VOLTAGE(V)");
-    lv_table_set_cell_value(table, 1, 1, "375");
-    lv_table_set_cell_value(table, 2, 0, "CURRENT(A)");
-    lv_table_set_cell_value(table, 2, 1, "17.5 (max:31.8)");
-    lv_table_set_cell_value(table, 3, 0, "POWER(kVt)");
-    lv_table_set_cell_value(table, 3, 1, "11.6 (max:29.4)");
-    lv_table_set_cell_value(table, 4, 0, "STROKES");
-    lv_table_set_cell_value(table, 4, 1, "7.92  SPM");
-    lv_table_set_cell_value(table, 5, 0, "RUNNING");
-    lv_table_set_cell_value(table, 5, 1, "14 d 21 h");
-    lv_table_set_cell_value(table, 6, 0, "SIGNAL(dBm)");
-    lv_table_set_cell_value(table, 6, 1, "64");
-
-    // Ширина колонок
-    lv_table_set_col_width(table, 0, 100);
-    lv_table_set_col_width(table, 1, 155);
-    lv_obj_align(table, LV_ALIGN_TOP_LEFT, 0, 0);
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  HAL_Delay(5);
-      lv_timer_handler();
-      HAL_GPIO_TogglePin(BLUE_LED_GPIO_Port, BLUE_LED_Pin);
-    /* USER CODE END WHILE */
-    /* USER CODE BEGIN 3 */
-  }
+      while (1)
+      {
+          lv_timer_handler();
+          
+          if(isDraw)
+          {
+              isDraw = 0;
+              lv_obj_t *spinner = lv_spinner_create(lv_screen_active());
+              lv_obj_set_size(spinner, 20, 20);  // минимальный размер
+              lv_obj_align(spinner, LV_ALIGN_CENTER, 0, 0);
+          }
+          HAL_Delay(5);          
+          HAL_GPIO_TogglePin(BLUE_LED_GPIO_Port, BLUE_LED_Pin);
+        /* USER CODE END WHILE */
+        /* USER CODE BEGIN 3 */
+      }
   /* USER CODE END 3 */
 }
 
