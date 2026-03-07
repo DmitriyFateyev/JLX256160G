@@ -172,7 +172,41 @@
     lv_obj_align(table, LV_ALIGN_TOP_LEFT, 0, 0);
 */
 //=====================================================================================    
-    
+lv_obj_t * label;
+
+lv_obj_t * btn1 = lv_button_create(lv_screen_active());
+lv_obj_align(btn1, LV_ALIGN_CENTER, 0, -40);
+lv_obj_remove_flag(btn1, LV_OBJ_FLAG_PRESS_LOCK);
+
+label = lv_label_create(btn1);
+lv_label_set_text(label, "Button");
+lv_obj_center(label);
+
+lv_obj_t * btn2 = lv_button_create(lv_screen_active());
+lv_obj_align(btn2, LV_ALIGN_CENTER, 0, 40);
+lv_obj_add_flag(btn2, LV_OBJ_FLAG_CHECKABLE);
+lv_obj_set_height(btn2, LV_SIZE_CONTENT);
+
+label = lv_label_create(btn2);
+lv_label_set_text(label, "Toggle");
+lv_obj_center(label);
+
+// Тест анимации без дуг — просто движущийся объект
+lv_obj_t *obj = lv_obj_create(lv_screen_active());
+lv_obj_set_size(obj, 20, 20);
+lv_obj_set_style_radius(obj, 0, 0);
+lv_obj_set_style_bg_color(obj, lv_color_black(), 0);
+
+lv_anim_t a;
+lv_anim_init(&a);
+lv_anim_set_var(&a, obj);
+lv_anim_set_exec_cb(&a, (lv_anim_exec_xcb_t)lv_obj_set_x);
+lv_anim_set_values(&a, 0, 256);
+lv_anim_set_duration(&a, 1000);
+lv_anim_set_playback_duration(&a, 1000);
+lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
+lv_anim_start(&a);
+//=====================================================================================    
     
     
     
